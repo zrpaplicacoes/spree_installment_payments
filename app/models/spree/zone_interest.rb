@@ -33,7 +33,7 @@ module Spree
     end
 
     def range_inside_zone_installments_limit?
-      end_number_of_installments  < max_number_of_installments
+      end_number_of_installments  <= max_number_of_installments
     end
 
     def min_range

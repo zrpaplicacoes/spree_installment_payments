@@ -34,6 +34,11 @@ describe 'Spree::ZoneInterest' do
       expect(interest.errors.messages[:end_number_of_installments]).to match_array ["13 overflows the established limit of 12"]
     end
 
+    it 'allows to define the full interval' do
+      interest = build(:zone_interest, zone: zone, start_number_of_installments: 1, end_number_of_installments: 12)
+      expect(interest.save).to be_truthy
+    end
+
     it 'allows interests between 0 (non-inclusive) and 1 (inclusive) only' do
       expect(build(:zone_interest, zone: zone, interest: 0).valid?).to be_falsy
       expect(build(:zone_interest, zone: zone, interest: 0.05).valid?).to be_truthy
