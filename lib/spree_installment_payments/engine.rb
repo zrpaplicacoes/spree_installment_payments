@@ -4,6 +4,10 @@ module SpreeInstallmentPayments
     isolate_namespace Spree
     engine_name 'spree_installment_payments'
 
+    initializer "spree.register.interest_calculator", :after => 'spree.register.calculators' do |app|
+      app.config.spree.calculators.tax_rates << Spree::Calculator::TaxRates::InterestCalculator
+    end
+
     # use rspec for tests
     config.generators do |g|
       g.test_framework :rspec

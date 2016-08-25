@@ -1,5 +1,6 @@
 module Spree
   Order.class_eval do
+
     def charge_interest?
 
     end

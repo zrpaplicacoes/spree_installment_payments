@@ -2,6 +2,9 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  spree:
+    calculators:
+      interest_calculator: Calculates the interest amount of a given order, considering the interest a tax rate
   activerecord:
     errors:
       invalid_range: "%{start} to %{end} does not configure a valid range"
