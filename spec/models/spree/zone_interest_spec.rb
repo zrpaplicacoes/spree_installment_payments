@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Spree::ZoneInterest do
+describe 'Spree::ZoneInterest' do
   subject { Spree::ZoneInterest }
 
   it 'belongs to zone' do
@@ -8,24 +8,25 @@ describe Spree::ZoneInterest do
   end
 
   context 'same zone' do
+    let(:zone) { create(:global_zone) }
     it 'does not allow an overlapping range ' do
       expect  {
-        create(:zone_interest, start_number_of_installments: 3, end_number_of_installments: 6)
+        create(:zone_interest, start_number_of_installments: 3, end_number_of_installments: 6, spree_zone_id: zone.id )
       }.to change(subject, :count).by 1
 
-      expect(build(:zone_interest, start_number_of_installments: 2, end_number_of_installments: 3).valid?).to be_falsy
-      expect(build(:zone_interest, start_number_of_installments: 3, end_number_of_installments: 5).valid?).to be_falsy
-      expect(build(:zone_interest, start_number_of_installments: 3, end_number_of_installments: 6).valid?).to be_falsy
-      expect(build(:zone_interest, start_number_of_installments: 4, end_number_of_installments: 6).valid?).to be_falsy
-      expect(build(:zone_interest, start_number_of_installments: 4, end_number_of_installments: 10).valid?).to be_falsy
-      expect(build(:zone_interest, start_number_of_installments: 6, end_number_of_installments: 7).valid?).to be_falsy
+      expect(build(:zone_interest, spree_zone_id: zone.id, start_number_of_installments: 2, end_number_of_installments: 3).valid?).to be_falsy
+      expect(build(:zone_interest, spree_zone_id: zone.id, start_number_of_installments: 3, end_number_of_installments: 5).valid?).to be_falsy
+      expect(build(:zone_interest, spree_zone_id: zone.id, start_number_of_installments: 3, end_number_of_installments: 6).valid?).to be_falsy
+      expect(build(:zone_interest, spree_zone_id: zone.id, start_number_of_installments: 4, end_number_of_installments: 6).valid?).to be_falsy
+      expect(build(:zone_interest, spree_zone_id: zone.id, start_number_of_installments: 4, end_number_of_installments: 10).valid?).to be_falsy
+      expect(build(:zone_interest, spree_zone_id: zone.id, start_number_of_installments: 6, end_number_of_installments: 7).valid?).to be_falsy
     end
 
     it 'allows interests between 0 (non-inclusive) and 1 (inclusive) only' do
-      expect(build(:zone_interest, interest: 0).valid?).to be_falsy
-      expect(build(:zone_interest, interest: 0.05).valid?).to be_truthy
-      expect(build(:zone_interest, interest: 1).valid?).to be_truthy
-      expect(build(:zone_interest, interest: 1.01).valid?).to be_falsy
+      expect(build(:zone_interest, spree_zone_id: zone.id, interest: 0).valid?).to be_falsy
+      expect(build(:zone_interest, spree_zone_id: zone.id, interest: 0.05).valid?).to be_truthy
+      expect(build(:zone_interest, spree_zone_id: zone.id, interest: 1).valid?).to be_truthy
+      expect(build(:zone_interest, spree_zone_id: zone.id, interest: 1.01).valid?).to be_falsy
     end
 
   end
