@@ -1,15 +1,29 @@
 describe Spree::ZoneInterest do
+  subject { Spree::ZoneInterest }
+
   it 'belongs to zone' do
 
   end
 
   context 'same zone' do
     it 'does not allow an overlapping range ' do
+      expect  {
+        create(:zone_interest, start_number_of_installments: 3, end_number_of_installments: 6)
+      }.to change(subject, :count).by 1
 
+      expect(build(:zone_interest, start_number_of_installments: 2, end_number_of_installments: 3).valid?).to be_falsy
+      expect(build(:zone_interest, start_number_of_installments: 3, end_number_of_installments: 5).valid?).to be_falsy
+      expect(build(:zone_interest, start_number_of_installments: 3, end_number_of_installments: 6).valid?).to be_falsy
+      expect(build(:zone_interest, start_number_of_installments: 4, end_number_of_installments: 6).valid?).to be_falsy
+      expect(build(:zone_interest, start_number_of_installments: 4, end_number_of_installments: 10).valid?).to be_falsy
+      expect(build(:zone_interest, start_number_of_installments: 6, end_number_of_installments: 7).valid?).to be_falsy
     end
 
-    it 'only allows interests only between 0 and 1 inclusive' do
-
+    it 'allows interests between 0 (non-inclusive) and 1 (inclusive) only' do
+      expect(build(:zone_interest, interest: 0).valid?).to be_falsy
+      expect(build(:zone_interest, interest: 0.05).valid?).to be_truthy
+      expect(build(:zone_interest, interest: 1).valid?).to be_truthy
+      expect(build(:zone_interest, interest: 1.01).valid?).to be_falsy
     end
 
   end
