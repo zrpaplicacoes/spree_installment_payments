@@ -1,5 +1,7 @@
 # Run Coverage report
 require 'simplecov'
+require 'byebug'
+
 SimpleCov.start do
   add_filter 'spec/dummy'
   add_group 'Controllers', 'app/controllers'
