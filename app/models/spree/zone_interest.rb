@@ -14,7 +14,7 @@ module Spree
 
     # methods
     def overlapping_interests
-      &&  && !(min_range..max_range).overlaps?(start_number_of_installments..end_number_of_installments)
+      has_range? && range_inside_zone_installments_limit? && !(min_range..max_range).overlaps?(start_number_of_installments..end_number_of_installments)
     end
 
     private
@@ -23,20 +23,20 @@ module Spree
       start_number_of_installments < end_number_of_installments
     end
 
-    def
-
+    def range_inside_zone_installments_limit?
+      end_number_of_installments  < max_number_of_installments
     end
 
     def min_range
-      Spree::ZoneInterest.where(spree_zone_id: spree_zone_id).minimum(:start_number_of_installments) || 0
+      Spree::ZoneInterest.where(zone_id: zone_id).minimum(:start_number_of_installments) || 0
     end
 
     def max_range
-      Spree::ZoneInterest.where(spree_zone_id: spree_zone_id).maximum(:end_number_of_installments) || max_number_of_installments
+      Spree::ZoneInterest.where(zone_id: zone_id).maximum(:end_number_of_installments) || max_number_of_installments
     end
 
     def max_number_of_installments
-      zone ? Spree::Zone.where(id: spree_zone_id).max_number_of_installments : 0
+      zone ? zone.max_number_of_installments : 0
     end
 
   end
