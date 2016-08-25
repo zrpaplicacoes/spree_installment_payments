@@ -1,6 +1,12 @@
 FactoryGirl.define do
-  # Define your Spree extensions Factories within this file to enable applications, and other extensions to use and override them.
-  #
-  # Example adding this to your spec_helper will load these Factories for use:
-  # require 'spree_installment_payments/factories'
+
+  # zone_interest
+
+  factory :zone_interest, class: Spree::ZoneInterest do
+    start_number_of_installments 4
+    end_number_of_installments 10
+    interest 0.0199 # 1.99%
+    zone { create(:zone, max_number_of_installments: 12 ) }
+  end
+
 end

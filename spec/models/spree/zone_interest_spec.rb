@@ -1,8 +1,10 @@
+require 'rails_helper'
+
 describe Spree::ZoneInterest do
   subject { Spree::ZoneInterest }
 
   it 'belongs to zone' do
-
+    expect(subject.new.respond_to? :zone).to be_truthy
   end
 
   context 'same zone' do

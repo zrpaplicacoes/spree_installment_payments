@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 describe Spree::Zone do
   subject { Spree::Zone }
 
