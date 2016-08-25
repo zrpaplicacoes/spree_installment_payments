@@ -36,7 +36,9 @@ describe Spree::Calculator::TaxRates::InterestCalculator do
 
     context 'installment order from 3 to 6 months' do
       let(:installment_order_from_3_to_6) {
-        order = create(:order, has_installments: true, number_of_installments: 5)
+        order = create(:order_with_line_items, has_installments: true, number_of_installments: 5)
+        order.billing_address.country.zones << Spree::Zone.first
+        order
       }
 
       it 'returns the order value * 0.05 ' do
@@ -45,27 +47,31 @@ describe Spree::Calculator::TaxRates::InterestCalculator do
 
     end
 
-    context 'installment order from 7 to 12 months with 2 fixed decimal places' do
+    context 'installment order from 7 to 12 months' do
       let(:installment_order_from_7_to_12) {
         order = create(:order, has_installments: true, number_of_installments: 10)
+        order.billing_address.country.zones << Spree::Zone.first
+        order
       }
 
-      it 'returns the order value * 0.05 with 2 fixed decimal places' do
+      it 'returns the order value * 0.1' do
         expect(subject.compute(installment_order_from_7_to_12)).to eq(installment_order_from_7_to_12.item_total * 0.1)
       end
-
     end
-
 
   end
 
   context '#available?' do
     let(:installment_order) {
       order = create(:order, has_installments: true, number_of_installments: 6)
+      order.billing_address.country.zones << Spree::Zone.first
+      order
     }
 
     let(:non_installment_order) {
       order = create(:order, has_installments: false)
+      order.billing_address.country.zones << Spree::Zone.first
+      order
     }
 
     it 'should return true to an installment order' do
