@@ -13,6 +13,10 @@ module Spree
       byebug
     end
 
+    def compute_installments
+
+    end
+
   end
 
   Order.state_machine.before_transition to: :confirm, do: :valid_installments?
