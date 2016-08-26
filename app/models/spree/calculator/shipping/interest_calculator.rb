@@ -1,7 +1,7 @@
 module Spree
-  module Calculator::TaxRates
+  module Calculator::Shipping
 
-    class InterestCalculator < Spree::Calculator
+    class InterestCalculator < Spree::ShippingCalculator
       def self.description
         Spree.t(:interest_calculator, scope: 'calculators')
       end
