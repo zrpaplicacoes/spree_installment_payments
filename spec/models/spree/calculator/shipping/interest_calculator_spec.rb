@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe Spree::Calculator::TaxRates::InterestCalculator do
-  subject { Spree::Calculator::TaxRates::InterestCalculator.new }
+describe Spree::Calculator::Shipping::InterestCalculator do
+  subject { Spree::Calculator::Shipping::InterestCalculator.new }
 
   # define zone
   let!(:zone) {
@@ -20,7 +20,7 @@ describe Spree::Calculator::TaxRates::InterestCalculator do
   }
 
   it 'has a description for the class' do
-    expect(Spree::Calculator::TaxRates::InterestCalculator).to respond_to(:description)
+    expect(Spree::Calculator::Shipping::InterestCalculator).to respond_to(:description)
   end
 
   context "#compute" do

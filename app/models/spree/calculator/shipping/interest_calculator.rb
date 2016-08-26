@@ -7,6 +7,7 @@ module Spree
       end
 
       def compute(object)
+        byebug
         return 0 unless object.respond_to?(:item_total)
         total = object.item_total
         address = object.billing_address
