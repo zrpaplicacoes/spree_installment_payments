@@ -3,10 +3,6 @@ module Spree
     class ZoneInterestsController < ResourceController
       before_action :load_data, except: [:index]
 
-      def edit
-        #code
-      end
-
       private
 
       def collection

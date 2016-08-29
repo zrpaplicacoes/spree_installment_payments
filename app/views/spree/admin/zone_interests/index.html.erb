@@ -35,7 +35,7 @@
       <% @zone_interests.each do |interest| %>
         <tr id="<%= spree_dom_id interest %>" data-hook="zones_interest_row">
           <td><%= interest.name %></td>
-          <td><%= "#{interest.interest.to_f * 100}%" %></td>
+          <td><%= "#{(interest.interest.to_f * 100).round(4)}%" %></td>
           <td><%= interest.start_number_of_installments %></td>
           <td><%= interest.end_number_of_installments %></td>
           <td><%= interest.payment_method.name %></td>

@@ -34,7 +34,7 @@ module Spree
     private
 
     def has_range?
-      start_number_of_installments < end_number_of_installments
+      start_number_of_installments < end_number_of_installments if start_number_of_installments.present? && end_number_of_installments.present?
     end
 
     def range_inside_zone_installments_limit?
@@ -42,11 +42,11 @@ module Spree
     end
 
     def min_range
-      Spree::ZoneInterest.where(zone_id: zone_id).minimum(:start_number_of_installments) || 0
+      Spree::ZoneInterest.where(zone_id: zone_id).where.not(id: self.id).minimum(:start_number_of_installments) || 0
     end
 
     def max_range
-      Spree::ZoneInterest.where(zone_id: zone_id).maximum(:end_number_of_installments) || 0
+      Spree::ZoneInterest.where(zone_id: zone_id).where.not(id: self.id).maximum(:end_number_of_installments) || 0
     end
 
     def max_number_of_installments
