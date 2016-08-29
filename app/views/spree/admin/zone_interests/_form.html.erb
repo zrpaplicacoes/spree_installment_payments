@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col-md-6" data-hook="admin_zone_interest_form_fields">
+    <div class="panel panel-default">
+
+      <div class="panel-heading">
+        <h1 class="panel-title"><%= Spree.t(:general_settings)%></h1>
+      </div>
+
+      <div class="panel-body">
+        <div data-hook="name" class="form-group">
+          <%= label_tag :name %>
+          <%= zone_interest_form.text_field(:name, class: "form-control") %>
+        </div>
+        <div data-hook="interest" class='form-group'>
+          <%= label_tag :interest %>
+          <%= zone_interest_form.number_field(:interest, class: "form-control") %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="col-md-6" data-hook="admin_zone_interest_form_fields">
+    <div class="panel panel-default">
+
+      <div class="panel-heading">
+        <h1 class="panel-title"><%= Spree.t(:range_settings)%></h1>
+      </div>
+
+      <div class="panel-body">
+        <div data-hook="start_range" class="form-group">
+          <%= label_tag :start_number_of_installments %>
+          <%= zone_interest_form.number_field(:start_number_of_installments, class: "form-control", min: 0) %>
+        </div>
+        <div data-hook="end_range" class="form-group">
+          <%= label_tag :end_number_of_installments %>
+          <%= zone_interest_form.number_field(:end_number_of_installments, class: "form-control", min: 0) %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

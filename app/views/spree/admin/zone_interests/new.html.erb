@@ -1,0 +1,11 @@
+<% content_for :page_title do %>
+  <%= link_to Spree.t(:zone_interests), spree.admin_zone_interests_url %> /
+  <%= Spree.t(:new_zone_interest) %>
+<% end %>
+
+<%= render partial: 'spree/admin/shared/error_messages', locals: { target: @zone_interest } %>
+
+<%= form_for [:admin, @zone_interest] do |zone_interest_form| %>
+  <%= render partial: 'form', locals: { zone_interest_form: zone_interest_form } %>
+  <%= render partial: 'spree/admin/shared/new_resource_links' %>
+<% end %>
