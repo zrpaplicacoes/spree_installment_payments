@@ -1,16 +1,19 @@
 module Spree
   class Interest
+
+    class UndefinedZone < StandardError; end
+
     def initialize args
       setup(args[:order])
     end
 
     def applicable?
       # all selected payment methods accept installments
-      @order.payments.all? { |payment| payment.accept_installments? }
+      @order.payments.all? { |payment| installment?(payment) }
     end
 
     def retrieve
-      if applicable?
+      # if applicable?
     end
 
     private
@@ -18,11 +21,18 @@ module Spree
     def setup(order)
       @order = order
       @zones = zones
+      raise UndefinedZone if @zones.empty?
+    end
+
+    def installment?(payment)
+      payment.accept_installments? &&
+      payment.max_number_of_installments > 1 &&
+      payment.installments > 1
     end
 
     def zones
-      address = @order.billing_address
-      order_zones = address.country.zones | address.state.zones if @billing_address
+      order_zones = @order.billing_address.country.zones | @order.billing_address.state.zones if @order.billing_address
+
       order_zones.present? ? order_zones : []
     end
 

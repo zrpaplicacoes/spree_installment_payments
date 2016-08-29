@@ -2,6 +2,7 @@ module Spree
   class ZoneInterest < ActiveRecord::Base
     # relations
     belongs_to :zone
+    belongs_to :payment_method
 
     # validations
     validates :start_number_of_installments, :end_number_of_installments, :zone_id, :interest, presence: true
