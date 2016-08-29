@@ -1,3 +1,5 @@
 Spree::Core::Engine.routes.draw do
-  # Add your extension routes here
+  namespace :admin do
+    resources :zone_interests, only: [:index, :new, :create, :show]
+  end
 end
