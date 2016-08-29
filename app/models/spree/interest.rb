@@ -12,8 +12,9 @@ module Spree
       raise UndefinedZone unless @zone.present?
     end
 
-    def available_interests
-      @zone.interests
+    def format_options_for_select
+      available_ranges = @zone.interests.map { |interest| [interest.start_number_of_installments, interest.end_number_of_installments] }
+      byebug
     end
 
     def retrieve

@@ -4,13 +4,6 @@
       <%= label_tag "installments_on_card_#{payment_method.id}" do %>
       <%= Spree.t(:installments) %>
       <% end %>
-      <%= number_field "#{param_prefix}[installments]", 1, id: "installments_on_card_#{payment_method.id}", class: 'form-control required js-installments', min: 1, max: interest.max_number_of_installments %>
+      <%= select_tag "#{param_prefix}[installments]", options_from_collection_for_select(interest.format_options_for_select) id: "installments_on_card_#{payment_method.id}". class: "form-control" %>
   </p>
 <% end %>
-
-<script type="text/javascript">
-  $(document).ready(function() {
-    window.item_total = "<%= @order.item_total.to_f %>";
-    window.installment_interests = <%= @order.installment_interests.to_json.html_safe %>;
-  });
-</script>
