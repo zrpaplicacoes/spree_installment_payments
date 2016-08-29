@@ -10,6 +10,8 @@ module Spree
     validates :start_number_of_installments, numericality: { greater_than: 0, only_integer: true }
     validates :interest, numericality: { less_than_or_equal_to: 1, greater_than: 0 }
 
+    validates :name, uniqueness: { allow_blank: true }
+
     validate :range
     validate :inside_zone_limits
     validate :overlapping_interests
@@ -28,7 +30,7 @@ module Spree
     end
 
     def fit? number_of_installments
-      number_of_installments.between?(i.start_number_of_installments,i.end_number_of_installments)
+      number_of_installments.between?(start_number_of_installments,end_number_of_installments)
     end
 
     private
@@ -42,11 +44,11 @@ module Spree
     end
 
     def min_range
-      Spree::ZoneInterest.where(zone_id: zone_id).where.not(id: self.id).minimum(:start_number_of_installments) || 0
+      Spree::ZoneInterest.where(zone_id: zone_id, payment_method: payment_method_id).where.not(id: self.id).minimum(:start_number_of_installments) || 0
     end
 
     def max_range
-      Spree::ZoneInterest.where(zone_id: zone_id).where.not(id: self.id).maximum(:end_number_of_installments) || 0
+      Spree::ZoneInterest.where(zone_id: zone_id, payment_method: payment_method_id).where.not(id: self.id).maximum(:end_number_of_installments) || 0
     end
 
     def max_number_of_installments

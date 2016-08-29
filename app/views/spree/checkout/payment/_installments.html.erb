@@ -1,0 +1,16 @@
+<%- interest = Spree::Interest.new order: @order %>
+<%- if payment_method.accept_installments? && interest.max_number_of_installments > 1 %>
+  <p class="field" data-hook="installments">
+      <%= label_tag "installments_on_card_#{payment_method.id}" do %>
+      <%= Spree.t(:installments) %>
+      <% end %>
+      <%= number_field "#{param_prefix}[installments]", 1, id: "installments_on_card_#{payment_method.id}", class: 'form-control required js-installments', min: 1, max: interest.max_number_of_installments %>
+  </p>
+<% end %>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    window.item_total = "<%= @order.item_total.to_f %>";
+    window.installment_interests = <%= @order.installment_interests.to_json.html_safe %>;
+  });
+</script>

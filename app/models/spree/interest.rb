@@ -12,8 +12,20 @@ module Spree
       raise UndefinedZone unless @zone.present?
     end
 
+    def available_interests
+      @zone.interests
+    end
+
     def retrieve
       applicable? ? interest : 0.0
+    end
+
+    def max_number_of_installments
+      [
+        max_number_of_installments_for_order,
+        max_number_of_installments_for_zone,
+        max_number_of_installments_for_payment_methods
+      ].min
     end
 
     def installment_error_message
@@ -52,14 +64,6 @@ module Spree
 
     def installments_for_order
       @order.payments.map(&:installments).max
-    end
-
-    def max_number_of_installments
-      [
-        max_number_of_installments_for_order,
-        max_number_of_installments_for_zone,
-        max_number_of_installments_for_payment_methods
-      ].min
     end
 
     def max_number_of_installments_for_order
