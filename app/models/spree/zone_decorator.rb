@@ -6,7 +6,7 @@ module Spree
 
     validates :max_number_of_installments, presence: true, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 100 }
 
-    validates :base_value, numericality: { greater_than: 0, less_than_or_equal_to: 100000 }
+    validates :base_value, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100000 }
 
     def has_installments?
       max_number_of_installments.present? && max_number_of_installments > 1

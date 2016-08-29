@@ -3,17 +3,8 @@ module Spree
     class ZoneInterestsController < ResourceController
       before_action :load_data, except: [:index]
 
-      def index
-      end
-
-      def new
-        @zone_interest = ZoneInterest.new
-      end
-
-      def create
-        unless @zone_interest.save
-          flash[:error] = @zone_interest.errors.messages.join(', ')
-        end
+      def edit
+        #code
       end
 
       private
@@ -26,8 +17,8 @@ module Spree
       end
 
       def load_data
-        @countries = Country.order(:name)
-        @states = State.order(:name)
+        @zones = Zone.order(:name)
+        @payment_methods = PaymentMethod.order(:name)
         @zone_interests = ZoneInterest.order(:name)
       end
 

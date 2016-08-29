@@ -3,6 +3,9 @@
 
 en:
   spree:
+    interest_explanation: Interest defines the tax charged in an order based on installments, so if you want a 5% tax, you should set 0.05
+    create_payment_method: Create a new payment method!
+    create_zone: Create a new zone!
     calculators:
       interest_calculator: Calculates the interest amount of a given order, considering the interest a tax rate
   activerecord:

@@ -13,14 +13,31 @@
         </div>
         <div data-hook="interest" class='form-group'>
           <%= label_tag :interest %>
-          <%= zone_interest_form.number_field(:interest, class: "form-control") %>
+          <%= zone_interest_form.number_field(:interest, class: "form-control", step: 0.0001, in: 0..1) %>
+          <p class="help-block">
+            <%= Spree.t(:interest_explanation) %>
+          </p>
         </div>
-        <div data-hook="interest" class='form-group'>
-          <%= label_tag :interest %>
-          <%= zone_interest_form.select(:payment_method_id, class: "form-control") do %>
-            <% payment_methods.each do |payment| -%>
-              <%= content_tag(:option, value: payment.id) %>
-            <% end %>
+        <div data-hook="zone" class='form-group'>
+          <%= label_tag :zone %>
+          <%= collection_select(:zone_interest, :zone_id, zones, :id, :name, {}, { id: 'zone', class: 'select2'}) unless zones.empty? %>
+          <% if (zones.empty? && can?(:create, Spree::Zone)) %>
+            <div class="alert alert-info no-objects-found">
+              <%= Spree.t(:no_resource_found, resource: plural_resource_name(Spree::Zone)) %>!
+              </br>
+              <%= link_to(Spree.t(:create_zone), new_admin_zone_path, class: "") %>
+            </div>
+          <% end %>
+        </div>
+        <div data-hook="payment-method" class='form-group'>
+          <%= label_tag :payment_method %>
+          <%= collection_select(:zone_interest, :payment_method_id, payment_methods, :id, :name, {}, { id: 'pymt-method', class: 'select2'}) unless payment_methods.empty? %>
+          <% if (payment_methods.empty? && can?(:create, Spree::PaymentMethod)) %>
+            <div class="alert alert-info no-objects-found">
+              <%= Spree.t(:no_resource_found, resource: plural_resource_name(Spree::PaymentMethod)) %>!
+              </br>
+              <%= link_to(Spree.t(:create_payment_method), new_admin_payment_method_path, class: "") %>
+            </div>
           <% end %>
         </div>
       </div>

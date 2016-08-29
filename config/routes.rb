@@ -1,5 +1,5 @@
 Spree::Core::Engine.routes.draw do
   namespace :admin do
-    resources :zone_interests, only: [:index, :new, :create, :show]
+    resources :zone_interests
   end
 end
