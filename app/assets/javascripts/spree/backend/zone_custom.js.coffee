@@ -1,12 +1,18 @@
 $ ->
+  ($ document).ready ->
+    show_label() if no_installment()
+
   ($ "#max_number_of_installments").change ->
-    if @.value == "1"
+    if no_installment()
       show_label()
     else
       hide_label()
 
+  no_installment = ->
+    $("#max_number_of_installments").val() == "1"
+
   show_label = ->
-    ($ "<div id='no_installment'>à vista</div>").insertAfter($ "#max_number_of_installments")
+    ($ "<label id='no_installment'>à vista</label>").insertAfter($ "#max_number_of_installments")
 
   hide_label = ->
     label = ($ "#max_number_of_installments").siblings "#no_installment"
