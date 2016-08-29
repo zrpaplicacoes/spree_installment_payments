@@ -1,0 +1,14 @@
+[data-hook="installments"] div {
+  position: relative;
+}
+
+#max_number_of_installments {
+  margin-bottom: 10px;
+}
+
+#max_number_of_installments ~ #no_installment {
+  position: absolute;
+  top: 5px;
+  right: 0;
+  color: green;
+}

@@ -3,7 +3,11 @@
 
 en:
   spree:
+    zone_interests: Zone Interests
+    max_number_of_installments: Maximum number of installments
+    base_value: Base value for installment
     interest_explanation: Interest defines the tax charged in an order based on installments, so if you want a 5% tax, you should set 0.05
+    charge_interest_explanation: Charge interest defines if the interest is store based or buyer based. Set this to true if you want taxes to be passed to your buyer gateway.
     create_payment_method: Create a new payment method!
     create_zone: Create a new zone!
     calculators:
