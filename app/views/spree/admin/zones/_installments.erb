@@ -1,0 +1,13 @@
+<div data-hook="installments" class="form-group">
+    <strong><%= Spree.t(:installments) %></strong>
+    <div class="">
+        <%= label_tag :max_number_of_installments do %>
+          <%= zone_form.number_field(:max_number_of_installments) %>
+        <% end %>
+    </div>
+    <div class="">
+      <%= label_tag :base_value do %>
+        <%= zone_form.number_field(:base_value) %>
+      <% end %>
+    </div>
+</div>
