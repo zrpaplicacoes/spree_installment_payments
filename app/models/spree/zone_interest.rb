@@ -26,6 +26,10 @@ module Spree
       errors.add(:start_number_of_installments, I18n.t('activerecord.errors.overlap', interval: "(#{min_range}, #{max_range})", defined_interval: "(#{start_number_of_installments},#{end_number_of_installments})")) if (min_range..max_range).overlaps?(start_number_of_installments..end_number_of_installments)
     end
 
+    def fit? number_of_installments
+      number_of_installments.between?(i.start_number_of_installments,i.end_number_of_installments)
+    end
+
     private
 
     def has_range?
