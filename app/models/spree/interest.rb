@@ -13,8 +13,56 @@ module Spree
     end
 
     def format_options_for_select
-      available_ranges = @zone.interests.map { |interest| [interest.start_number_of_installments, interest.end_number_of_installments] }
-      byebug
+      interests = @zone.interests.order(:start_number_of_installments)
+      range_start = interests.first.start_number_of_installments
+      range_end = interests.last.end_number_of_installments
+
+      range_start_fix = 1 >= (range_start - 1) ? 1 : range_start - 1
+      missing_start_range = (1..range_start_fix)
+
+      range_end_fix = max_number_of_installments <= (range_end + 1) ? max_number_of_installments : range_end + 1
+      missing_end_range = (range_end_fix..max_number_of_installments)
+
+      ranges = [ { range: missing_start_range, interest: 0 } ]
+      interests.each do |interest|
+        normalized_end_range = interest.end_number_of_installments > max_number_of_installments ? max_number_of_installments : interest.end_number_of_installments
+        ranges << { range: (interest.start_number_of_installments..normalized_end_range), interest: interest.interest.to_f }
+      end
+
+      ranges << { range: missing_end_range, interest: interests.last.interest.to_f }
+
+      ranges = ranges.reject { |interest| interest[:range].size == 1 }
+
+      normalized_ranges = []
+      ranges = ranges.each do |interest|
+        normalized_ranges = interest[:range].map do |installments|
+          installments_text(interest[:interest], installments)
+          [installments_text(interest[:interest], installments), installments]
+        end
+      end
+
+      normalized_ranges
+
+    end
+
+    def installments_text interest, installments
+      total = @order.item_total.to_f.round(4)
+      per_item = (total / installments).to_f.round(4)
+      interest_percentage = "#{(interest * 100).round(4)}%"
+
+      if interest == 0
+        if installments == 1
+          Spree.t(:no_installments_without_interest, total: total.to_money.format)
+        else
+          Spree.t(:installments_without_interest, total: total.to_money.format, per_item: per_item.to_money.format, installments: installments)
+        end
+      else
+        if installments == 1
+          Spree.t(:no_installments_with_interest, total: (total * (1 + interest)).to_money.format, interest: interest_percentage)
+        else
+          Spree.t(:installments_with_interest, total: (total * (1 + interest)).to_money.format, per_item: (per_item * (1 + interest)).to_money.format, interest: interest_percentage, installments: installments)
+        end
+      end
     end
 
     def retrieve
