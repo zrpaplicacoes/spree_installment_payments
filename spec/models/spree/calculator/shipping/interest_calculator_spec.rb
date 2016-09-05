@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Spree::Calculator::Shipping::InterestCalculator do
+describe Spree::Calculator::InterestCalculator do
   subject { Spree::Calculator::Shipping::InterestCalculator.new }
 
   # define zone
