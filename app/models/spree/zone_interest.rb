@@ -33,6 +33,10 @@ module Spree
       number_of_installments.between?(start_number_of_installments,end_number_of_installments)
     end
 
+    def to_hash_range
+      { range: [start_number_of_installments,end_number_of_installments], interest: interest }
+    end
+
     private
 
     def has_range?
