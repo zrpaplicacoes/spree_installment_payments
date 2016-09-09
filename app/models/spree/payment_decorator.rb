@@ -2,7 +2,7 @@ module Spree
 
   Payment.class_eval do
 
-    delegate [:accept_installments?, :max_number_of_installments, :charge_interest ], to: :payment_method
+    delegate *[:accept_installments?, :max_number_of_installments, :charge_interest ], to: :payment_method
 
     validate :valid_installments?
 
