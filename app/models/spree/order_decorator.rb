@@ -2,12 +2,8 @@ module Spree
   Order.class_eval do
 
     def valid_installments?
-      Spree::Interest.new(order: self)
       byebug
-    end
-
-    def installment_interests
-      Spree::Interest.new(order: self).available_interests
+      Spree::Interest.new(order: self)
     end
 
   end
