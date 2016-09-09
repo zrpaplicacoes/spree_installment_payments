@@ -68,7 +68,7 @@ module Spree
     end
 
     def ranges_array opts={}
-      zone_interests = Spree::ZoneInterest.all
+      zone_interests = Spree::ZoneInterest.all.where(payment_method_id: payment_method_id)
       zone_interests = zone_interests.where.not(id: id) if opts[:exclude_self]
       zone_interests.order(:start_number_of_installments).pluck(:start_number_of_installments, :end_number_of_installments)
     end

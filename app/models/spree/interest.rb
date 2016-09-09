@@ -66,16 +66,21 @@ module Spree
       # complete the sequence
       fullfill_start = (1..(interests.first[:range].first - 1)) if interests.first[:range].first - 1 >= 1
 
-      interests_for_installments << fullfill_start.map { |installment| { range: installment, interest: 0 } } if fullfill_start
+      fullfill_start.map { |installment| interests_for_installments << { range: installment, interest: 0 } } if fullfill_start
 
       fullfill_with_interest = fullfill_start.present? ? ((interests.first[:range].first)..max_number_of_installments).to_a : (1..max_number_of_installments)
 
-      interests_for_installments << fullfill_with_interest.map do |installment|
-        defined_interest = interests.find { |i| (i[:range].first >= installment) || (installment <= i[:range].last) }
-        { range: installment, interest: defined_interest[:interest] }
+      fullfill_with_interest.map do |installment|
+        propagation = interests_for_installments.find { |interest| interest[:range] == installment - 1 }
+        available = interests.find { |interest| interest[:range].first <= installment && installment <= interest[:range].last }
+        if available
+          interests_for_installments << { range: installment, interest: available[:interest] }
+        else
+          interests_for_installments << { range: installment, interest: propagation[:interest] }
+        end
       end
 
-      interests_for_installments.flatten.uniq.sort_by { |interest| interest[:range] }
+      interests_for_installments.uniq.sort_by { |interest| interest[:range] }
 
     end
 
