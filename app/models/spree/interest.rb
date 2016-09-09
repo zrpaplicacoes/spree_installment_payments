@@ -56,24 +56,27 @@ module Spree
     private
 
     def interests_for_installments
+      interests_for_installments = []
+
       interests = @zone.interests.where(payment_method: @payment_method).order(:start_number_of_installments)
       interests = interests.map { |interest| interest.to_hash_range }
 
       return [ { range: 1..max_number_of_installments, interest: 0 } ] if interests.empty?
 
-      missing = []
-      min_installments_range = interests.first[:range]
-      max_installments_range = interests.last[:range]
+      # complete the sequence
+      fullfill_start = (1..(interests.first[:range].first - 1)) if interests.first[:range].first - 1 >= 1
 
-      missing.push( { range: [1, min_installments_range.first - 1], interest: 0 } ) if ( (min_installments_range.first - 1) >= 1)
-      missing.push( { range: [max_installments_range.last + 1, max_number_of_installments], interest: interests.last[:interest] } ) if ( (max_installments_range.last + 1) <= max_number_of_installments )
-      ranges = interests | missing
+      interests_for_installments << fullfill_start.map { |installment| { range: installment, interest: 0 } } if fullfill_start
 
-      ranges.uniq.sort_by { |interest| interest[:range].first }.map do |interest|
-        interest[:single] = (interest[:range].first == interest[:range].last)
-        interest[:range] = interest[:single] ? interest[:range].first : (interest[:range].first)..(interest[:range].last)
-        interest
+      fullfill_with_interest = fullfill_start.present? ? ((interests.first[:range].first)..max_number_of_installments).to_a : (1..max_number_of_installments)
+
+      interests_for_installments << fullfill_with_interest.map do |installment|
+        defined_interest = interests.find { |i| (i[:range].first >= installment) || (installment <= i[:range].last) }
+        { range: installment, interest: defined_interest[:interest] }
       end
+
+      interests_for_installments.flatten.uniq.sort_by { |interest| interest[:range] }
+
     end
 
     def installments_text interest, installments

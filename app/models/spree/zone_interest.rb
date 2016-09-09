@@ -26,7 +26,13 @@ module Spree
     end
 
     def overlapping_interests
-      errors.add(:start_number_of_installments, I18n.t('activerecord.errors.overlap', interval: "(#{min_range}, #{max_range})", defined_interval: "(#{start_number_of_installments},#{end_number_of_installments})")) if (min_range..max_range).overlaps?(start_number_of_installments..end_number_of_installments)
+      if index = ranges(exclude_self: true).find_index { |range| range.overlaps? current_range }
+        error = 'activerecord.errors.overlap'
+        interval = "(#{ranges(exclude_self: true)[index]})"
+        defined_interval =  "(#{current_range})"
+        message = I18n.t(error, interval: interval, defined_interval: defined_interval)
+        errors.add(:start_number_of_installments, message)
+      end
     end
 
     def fit? number_of_installments
@@ -53,6 +59,22 @@ module Spree
 
     def max_range
       Spree::ZoneInterest.where(zone_id: zone_id, payment_method: payment_method_id).where.not(id: self.id).maximum(:end_number_of_installments) || 0
+    end
+
+    def ranges opts
+      ranges = ranges_array(opts).map { |range| range[0]..range[1] }
+      ranges = ranges.reject { |range| range.first == start_number_of_installments && range.last == end_number_of_installments }
+      ranges
+    end
+
+    def ranges_array opts={}
+      zone_interests = Spree::ZoneInterest.all
+      zone_interests = zone_interests.where.not(id: id) if opts[:exclude_self]
+      zone_interests.order(:start_number_of_installments).pluck(:start_number_of_installments, :end_number_of_installments)
+    end
+
+    def current_range
+      (start_number_of_installments..end_number_of_installments)
     end
 
     def max_number_of_installments
