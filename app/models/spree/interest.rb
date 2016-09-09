@@ -10,6 +10,7 @@ module Spree
       raise UndefinedPaymentMethod unless args[:payment_method].present?
       @order = args[:order]
       @payment_method = args[:payment_method]
+      @payment = @order.payments.where(:state => :checkout)
       @zone = zone
 
       raise UndefinedZone unless @zone.present?

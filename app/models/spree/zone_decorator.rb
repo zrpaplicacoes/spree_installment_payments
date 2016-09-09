@@ -1,6 +1,6 @@
 module Spree
   Zone.class_eval do
-    has_many :zone_interests
+    has_many :zone_interests, dependent: :destroy
 
     alias_method :interests, :zone_interests
 
