@@ -3,6 +3,10 @@
 
 en:
   spree:
+    no_installments_without_interest: "%{total} without installments (no interest)"
+    installments_without_interest: "%{total} (%{installments} x %{per_item}) (no interest)"
+    no_installments_with_interest: "%{total} without installments (%{interest} monthly)"
+    installments_with_interest: "%{total} (%{installments} x %{per_item}) (%{interest} monthly)"
     zone_interests: Zone Interests
     max_number_of_installments: Maximum number of installments
     base_value: Base value for installment

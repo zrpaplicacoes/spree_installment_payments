@@ -3,17 +3,46 @@ module Spree
 
     class UndefinedOrder < StandardError; end
     class UndefinedZone < StandardError; end
+    class UndefinedPaymentMethod < StandardError; end
 
     def initialize args
       raise UndefinedOrder unless args[:order].present?
+      raise UndefinedPaymentMethod unless args[:payment_method].present?
       @order = args[:order]
+      @payment_method = args[:payment_method]
       @zone = zone
 
       raise UndefinedZone unless @zone.present?
     end
 
+    def format_options_for_select
+      range_select_options = []
+
+      interests_for_installments.each do |interest_for_installments|
+        interest = interest_for_installments[:interest]
+        convert_to_option = Proc.new { |installment| [installments_text(interest.to_f, installment), installment] }
+
+        result = Array(interest_for_installments[:range]).map(&convert_to_option)
+        range_select_options = range_select_options | result
+
+      end
+      range_select_options
+    end
+
     def retrieve
       applicable? ? interest : 0.0
+    end
+
+    def display_installments?
+      @payment_method.accept_installments? && max_number_of_installments > 1
+    end
+
+    def max_number_of_installments
+      [
+        max_number_of_installments_for_order,
+        max_number_of_installments_for_zone,
+        @payment_method.max_number_of_installments
+      ].min
     end
 
     def installment_error_message
@@ -25,6 +54,46 @@ module Spree
     end
 
     private
+
+    def interests_for_installments
+      interests_for_installments = []
+
+      interests = @zone.interests.where(payment_method: @payment_method).order(:start_number_of_installments)
+      interests = interests.map { |interest| interest.to_hash_range }
+
+      return [ { range: 1..max_number_of_installments, interest: 0 } ] if interests.empty?
+
+      # complete the sequence
+      fullfill_start = (1..(interests.first[:range].first - 1)) if interests.first[:range].first - 1 >= 1
+
+      interests_for_installments << fullfill_start.map { |installment| { range: installment, interest: 0 } } if fullfill_start
+
+      fullfill_with_interest = fullfill_start.present? ? ((interests.first[:range].first)..max_number_of_installments).to_a : (1..max_number_of_installments)
+
+      interests_for_installments << fullfill_with_interest.map do |installment|
+        defined_interest = interests.find { |i| (i[:range].first >= installment) || (installment <= i[:range].last) }
+        { range: installment, interest: defined_interest[:interest] }
+      end
+
+      interests_for_installments.flatten.uniq.sort_by { |interest| interest[:range] }
+
+    end
+
+    def installments_text interest, installments
+      total = @order.display_total.money
+      total_with_interest = total * (1 + interest)
+      per_item = (total / installments)
+      per_item_with_interest = (total_with_interest / installments)
+      interest_percentage = "#{(interest * 100).round(4)}%"
+
+      text_to_use = [interest == 0 && installments == 1, interest == 0 && installments > 1, interest > 0 && installments == 1, interest > 0 && installments > 1].find_index(true)
+
+      [
+        Spree.t(:no_installments_without_interest, total: total.format),
+        Spree.t(:installments_without_interest, total: total.format, per_item: per_item.format, installments: installments), Spree.t(:no_installments_with_interest, total: total_with_interest.format, interest: interest_percentage), Spree.t(:installments_with_interest, total: total_with_interest.format, per_item: per_item_with_interest.format, interest: interest_percentage, installments: installments)
+      ][text_to_use]
+
+    end
 
     def applicable?
       @order.payments.all? { |payment| splitable?(payment) } &&
@@ -54,24 +123,12 @@ module Spree
       @order.payments.map(&:installments).max
     end
 
-    def max_number_of_installments
-      [
-        max_number_of_installments_for_order,
-        max_number_of_installments_for_zone,
-        max_number_of_installments_for_payment_methods
-      ].min
-    end
-
     def max_number_of_installments_for_order
       (@order.item_total.to_f / @zone.base_value.to_f).to_i
     end
 
     def max_number_of_installments_for_zone
       @zone.max_number_of_installments.to_i
-    end
-
-    def max_number_of_installments_for_payment_methods
-      @order.payments.map(&:max_number_of_installments).min.to_i
     end
 
     def interest
