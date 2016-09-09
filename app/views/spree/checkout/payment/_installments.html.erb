@@ -1,5 +1,5 @@
 <%- interest = Spree::Interest.new order: @order, payment_method: payment_method %>
-<%- if interest.display_installments? %>
+<%- if interest.available_installments? %>
   <p class="field" data-hook="installments">
       <%= label_tag "installments_on_card_#{payment_method.id}" do %>
         <%= Spree.t(:installments) %>

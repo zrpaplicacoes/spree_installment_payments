@@ -17,6 +17,13 @@ module Spree
     validate :overlapping_interests
 
     # methods
+
+    def compute_amount shipment
+      order = shipment.order
+      payment = order.payments.where(state: :checkout).first
+      payment.present? ? Spree::Interest.new(order: order, payment_method: payment.payment_method) : 0.0
+    end
+
     def range
       errors.add(:start_number_of_installments, I18n.t('activerecord.errors.invalid_range', start: start_number_of_installments, end: end_number_of_installments)) unless has_range?
     end

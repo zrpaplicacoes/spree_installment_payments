@@ -3,6 +3,7 @@
 
 en:
   spree:
+    of: of
     no_installments_without_interest: "%{total} without installments (no interest)"
     installments_without_interest: "%{total} (%{installments} x %{per_item}) (no interest)"
     no_installments_with_interest: "%{total} without installments (%{interest} monthly)"
@@ -16,6 +17,8 @@ en:
     create_zone: Create a new zone!
     calculators:
       interest_calculator: Calculates the interest amount of a given order, considering the interest a tax rate
+    adjustments:
+      interest_adjustment_label: 'Order total (with interest of %{interest}%):'
   activerecord:
     errors:
       invalid_range: "%{start} to %{end} does not configure a valid range"

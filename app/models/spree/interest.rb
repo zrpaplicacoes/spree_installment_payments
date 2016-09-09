@@ -10,7 +10,7 @@ module Spree
       raise UndefinedPaymentMethod unless args[:payment_method].present?
       @order = args[:order]
       @payment_method = args[:payment_method]
-      @payment = @order.payments.where(:state => :checkout)
+      @payment = @order.payments.where(:state => :checkout).first
       @zone = zone
 
       raise UndefinedZone unless @zone.present?
@@ -23,7 +23,7 @@ module Spree
         interest = interest_for_installments[:interest]
         convert_to_option = Proc.new { |installment| [installments_text(interest.to_f, installment), installment] }
 
-        result = Array(interest_for_installments[:range]).map(&convert_to_option)
+        result = Array(interest_for_installments[:installment]).map(&convert_to_option)
         range_select_options = range_select_options | result
 
       end
@@ -31,10 +31,22 @@ module Spree
     end
 
     def retrieve
-      applicable? ? interest : 0.0
+      interests_for_installments[@payment.installments - 1][:interest]
     end
 
-    def display_installments?
+    def retrieve_percentage
+      (retrieve * 100).round(4)
+    end
+
+    def exists?
+      retrieve != 0
+    end
+
+    def payment_method_name
+      @payment_method.name
+    end
+
+    def available_installments?
       @payment_method.accept_installments? && max_number_of_installments > 1
     end
 
@@ -54,6 +66,22 @@ module Spree
       Spree.t('activerecord.errors.non_installment_order') unless applicable?
     end
 
+    def order_total_with_interest
+      @order.display_total.money + order_adjustment
+    end
+
+    def order_installment_with_interest
+      (@order.display_total.money / @payment.installments ) * (1 + interest)
+    end
+
+    def order_installment
+      (@order.display_total.money / @payment.installments )
+    end
+
+    def order_adjustment
+      @order.display_total.money * interest
+    end
+
     private
 
     def interests_for_installments
@@ -67,7 +95,7 @@ module Spree
       # complete the sequence
       fullfill_start = (1..(interests.first[:range].first - 1)) if interests.first[:range].first - 1 >= 1
 
-      fullfill_start.map { |installment| interests_for_installments << { range: installment, interest: 0 } } if fullfill_start
+      fullfill_start.map { |installment| interests_for_installments << { installment: installment, interest: 0 } } if fullfill_start
 
       fullfill_with_interest = fullfill_start.present? ? ((interests.first[:range].first)..max_number_of_installments).to_a : (1..max_number_of_installments)
 
@@ -75,13 +103,13 @@ module Spree
         propagation = interests_for_installments.find { |interest| interest[:range] == installment - 1 }
         available = interests.find { |interest| interest[:range].first <= installment && installment <= interest[:range].last }
         if available
-          interests_for_installments << { range: installment, interest: available[:interest] }
+          interests_for_installments << { installment: installment, interest: available[:interest] }
         else
-          interests_for_installments << { range: installment, interest: propagation[:interest] }
+          interests_for_installments << { installment: installment, interest: propagation[:interest] }
         end
       end
 
-      interests_for_installments.uniq.sort_by { |interest| interest[:range] }
+      interests_for_installments.uniq.sort_by { |interest| interest[:installment] }
 
     end
 
@@ -138,8 +166,12 @@ module Spree
     end
 
     def interest
-      interest_for_installments = @zone.find_interest_for(number_of_installments)
-      interest_for_installments.present ? interest_for_installments.interest.to_f : 0.0
+      interest_for_installments = zone_interest(number_of_installments)
+      interest_for_installments.present? ? interest_for_installments.interest.to_f : 0.0
+    end
+
+    def zone_interest(number_of_installments)
+      @zone.find_interest_for(number_of_installments)
     end
 
     def zone
