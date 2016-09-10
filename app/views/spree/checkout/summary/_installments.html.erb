@@ -2,10 +2,10 @@
 
     <tr class="warning total total-with-interest">
       <td colspan="4" align="right">
-        <b><%= I18n.t('spree.adjustments.interest_adjustment_label', interest: (order.interest.retrieve_percentage) ) %></b>
+        <b><%= I18n.t('spree.interest_adjustment_label', interest: ( order.payment.interest * 100 )) %></b>
       </td>
       <td class="total">
-        <span class="lead text-primary"><%= order.interest.order_total_with_interest.format %></span>
+        <span class="lead text-primary"><%= order.display_total_with_interest %></span>
       </td>
     </tr>
 

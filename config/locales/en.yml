@@ -15,10 +15,9 @@ en:
     charge_interest_explanation: Charge interest defines if the interest is store based or buyer based. Set this to true if you want taxes to be passed to your buyer gateway.
     create_payment_method: Create a new payment method!
     create_zone: Create a new zone!
+    interest_adjustment_label: 'Order total (with interest of %{interest}%):'
     calculators:
       interest_calculator: Calculates the interest amount of a given order, considering the interest a tax rate
-    adjustments:
-      interest_adjustment_label: 'Order total (with interest of %{interest}%):'
   activerecord:
     errors:
       invalid_range: "%{start} to %{end} does not configure a valid range"

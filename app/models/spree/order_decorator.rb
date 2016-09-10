@@ -14,7 +14,7 @@ module Spree
     end
 
     def display_total_with_interest
-      Spree::Money.new(total * payment.interest, { currency: currency })
+      Spree::Money.new(total * (1 + payment.interest), { currency: currency })
     end
 
     def display_installment_with_interest

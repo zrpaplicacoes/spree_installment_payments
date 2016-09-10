@@ -23,7 +23,7 @@ module Spree
         interest = interest_for_installments[:interest]
         convert_to_option = Proc.new { |installment| [installments_text(interest.to_f, installment), installment] }
 
-        result = Array(interest_for_installments[:installment]).map(&convert_to_option)
+        result = Array(interest_for_installments[:range]).map(&convert_to_option)
         range_select_options = range_select_options | result
 
       end
@@ -90,12 +90,12 @@ module Spree
       interests = @zone.interests.where(payment_method: @payment_method).order(:start_number_of_installments)
       interests = interests.map { |interest| interest.to_hash_range }
 
-      return [ { range: 1..max_number_of_installments, interest: 0 } ] if interests.empty?
+      return (1..max_number_of_installments).map { |installment| {range: installment, interest: 0.0 } } if interests.empty?
 
       # complete the sequence
       fullfill_start = (1..(interests.first[:range].first - 1)) if interests.first[:range].first - 1 >= 1
 
-      fullfill_start.map { |installment| interests_for_installments << { installment: installment, interest: 0 } } if fullfill_start
+      fullfill_start.map { |installment| interests_for_installments << { range: installment, interest: 0 } } if fullfill_start
 
       fullfill_with_interest = fullfill_start.present? ? ((interests.first[:range].first)..max_number_of_installments).to_a : (1..max_number_of_installments)
 
@@ -103,13 +103,13 @@ module Spree
         propagation = interests_for_installments.find { |interest| interest[:range] == installment - 1 }
         available = interests.find { |interest| interest[:range].first <= installment && installment <= interest[:range].last }
         if available
-          interests_for_installments << { installment: installment, interest: available[:interest] }
+          interests_for_installments << { range: installment, interest: available[:interest] }
         else
-          interests_for_installments << { installment: installment, interest: propagation[:interest] }
+          interests_for_installments << { range: installment, interest: propagation[:interest] }
         end
       end
 
-      interests_for_installments.uniq.sort_by { |interest| interest[:installment] }
+      interests_for_installments.uniq.sort_by { |interest| interest[:range] }
 
     end
 
@@ -118,7 +118,7 @@ module Spree
       total_with_interest = total * (1 + interest)
       per_item = (total / installments)
       per_item_with_interest = (total_with_interest / installments)
-      interest_percentage = "#{(interest * 100).round(4)}%"
+      interest_percentage = "#{(interest * 100).to_f.round(4)}%"
 
       text_to_use = [interest == 0 && installments == 1, interest == 0 && installments > 1, interest > 0 && installments == 1, interest > 0 && installments > 1].find_index(true)
 
