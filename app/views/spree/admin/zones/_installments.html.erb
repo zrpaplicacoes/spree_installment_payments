@@ -6,5 +6,8 @@
   <div>
     <%= label_tag :base_value %>
     <%= zone_form.number_field(:base_value, min: 1, in: 1..10000, step: 1, class: "form-control") %>
+    <p class="help-block">
+      <%= Spree.t(:base_value_explanation) %>
+    </p>
   </div>
 </div>
