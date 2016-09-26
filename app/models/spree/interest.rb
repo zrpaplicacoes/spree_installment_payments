@@ -47,6 +47,7 @@ module Spree
     end
 
     def available_installments?
+      byebug
       @payment_method.accept_installments? && max_number_of_installments > 1
     end
 

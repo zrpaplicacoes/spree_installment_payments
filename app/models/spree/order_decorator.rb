@@ -2,7 +2,6 @@ module Spree
   Order.class_eval do
     def valid_installments?
       self.update(has_installments: payment.installments > 1) if payment.valid_installments?
-      payment.valid_installments?
     end
 
     def lock_payment_interest

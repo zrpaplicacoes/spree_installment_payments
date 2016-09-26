@@ -15,7 +15,6 @@ module Spree
     def valid_installments?
       remove_payment_source_installments unless payment_method.accept_installments?
       self.installments = payment_source.installments
-
       interest = Spree::Interest.new(order: order, payment_method: payment_method)
       accepted_installment_number?(interest) ? true : add_error_and_invalidate_payment(:installments, :invalid)
     end
@@ -37,6 +36,7 @@ module Spree
     def add_error_and_invalidate_payment attribute, message
       errors.add(attribute, message)
       self.state = :failed
+      false
     end
 
   end

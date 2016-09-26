@@ -3,6 +3,7 @@ FactoryGirl.define do
     interest 0.005 # 0.5%
     start_number_of_installments 2
     end_number_of_installments 8
+    zone { create(:zone, max_number_of_installments: 8) }
 
     trait :zone_interest_2_4 do
       start_number_of_installments 2
