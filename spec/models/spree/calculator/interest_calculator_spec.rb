@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 describe Spree::Calculator::InterestCalculator do
-  subject { Spree::Calculator::Shipping::InterestCalculator.new }
+  let(:order) { create(:order_with_line_item_quantity, line_items_quantity: 2) }
+  subject { Spree::Calculator::InterestCalculator.new({
+      order: order
+    }) }
 
   # define zone
   let!(:zone) {
@@ -19,8 +22,13 @@ describe Spree::Calculator::InterestCalculator do
     create(:zone_interest, zone: zone, start_number_of_installments: 7, end_number_of_installments: 12, interest: 0.1)
   }
 
-  it 'has a description for the class' do
-    expect(Spree::Calculator::Shipping::InterestCalculator).to respond_to(:description)
+  before :each do
+    order.billing_address.state.zones << zone
+    order.billing_address.state.save
+  end
+
+  it 'has a compute method' do
+    expect(subject).to respond_to(:compute)
   end
 
   context "#compute" do
