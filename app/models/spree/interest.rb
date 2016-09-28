@@ -47,7 +47,6 @@ module Spree
     end
 
     def available_installments?
-      byebug
       @payment_method.accept_installments? && max_number_of_installments > 1
     end
 
@@ -159,7 +158,11 @@ module Spree
     end
 
     def max_number_of_installments_for_order
-      (@order.item_total.to_f / @zone.base_value.to_f).to_i
+      if @zone.base_value.to_f > 0
+        (@order.item_total.to_f / @zone.base_value.to_f).to_i
+      else
+        1
+      end
     end
 
     def max_number_of_installments_for_zone
