@@ -26,3 +26,4 @@ en:
       overlap: "The specified interval %{defined_interval} overlaps the interval %{interval}"
       invalid_number_of_installments: "The order payment could not be split into %{number_of_installments} installments, since the max number of installments allowed for the selected payment  methods and order total is %{max_allowed}"
       non_installment_order: "The order payment could not be split because the payment method or the selected zone for the order could not installment payments"
+      invalid_payment: "The options for payment are not valid!"

@@ -1,6 +1,5 @@
 module Spree
   Order.class_eval do
-
     def set_installments
       self.has_installments = payment.valid_installments? && payment.installments > 1
       payment.interest = interest.retrieve.round(4) if !interest.retrieve.nil? && interest.retrieve > 0
@@ -8,9 +7,14 @@ module Spree
     end
 
     def save_installments
-      Order.transaction do
-        self.save
-        payment.save
+      begin
+        ActiveRecord::Base.transaction do
+          self.save! && payment.save!
+        end
+        true
+      rescue StandardError
+        errors.add(:payments, I18n.t('activerecord.errors.invalid_payment'))
+        false
       end
     end
 

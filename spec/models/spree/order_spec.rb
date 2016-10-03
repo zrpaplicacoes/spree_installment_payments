@@ -43,12 +43,11 @@ describe Spree::Order do
 
       context "with interest" do
         let(:interest) { 0.01 }
-        it { expect(order.display_total_per_installment).to eq "$106.15" }
+        it { expect(order.display_total_per_installment).to eq "$17.69" }
       end
 
       context "without interest" do
-
-        it { expect(order.display_total_per_installment).to eq "$100.00" }
+        it { expect(order.display_total_per_installment).to eq "$16.67" }
       end
     end
 
@@ -68,7 +67,6 @@ describe Spree::Order do
       end
 
       context "without interest" do
-
         it { expect(order.display_total).to eq "$100.00" }
       end
 
@@ -83,7 +81,6 @@ describe Spree::Order do
       end
 
       context "without interest" do
-
         it { expect(order.display_total).to eq "$100.00" }
       end
     end
@@ -159,6 +156,37 @@ describe Spree::Order do
       end
 	  end
 
+  end
+
+  describe '#save_installments' do
+
+    context "when save is performed" do
+      let(:order) { build(:order, total: 100, payments: [ build(:payment, installments: 1, amount: 100) ] )}
+
+      it 'returns true' do
+        allow_any_instance_of(Spree::Payment).to receive(:save!).and_return(true)
+        allow_any_instance_of(Spree::Order).to receive(:save!).and_return(true)
+        expect(order.save_installments).to be_truthy
+      end
+    end
+
+    context "when save fails" do
+      let(:order) { build(:order, total: 100) }
+
+      before :each do
+        allow_any_instance_of(Spree::Payment).to receive(:save!).and_return(true)
+        allow_any_instance_of(Spree::Order).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+      end
+
+      it 'returns false' do
+        expect(order.save_installments).to be_falsy
+      end
+
+      it 'adds an error to order payments' do
+        order.save_installments
+        expect(order.errors.messages[:payments].first).to eq "The options for payment are not valid!"
+      end
+    end
   end
 
 
