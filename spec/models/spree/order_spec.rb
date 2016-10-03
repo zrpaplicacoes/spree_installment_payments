@@ -24,7 +24,6 @@ describe Spree::Order do
 	  		order.billing_address.state.zones << create(:zone, max_number_of_installments: 8, base_value: 40)
 	  		order.billing_address.state.save
 	  		order.reload
-        byebug
         order.payment = invalid_payment
         order.payment.save
 	  	end
