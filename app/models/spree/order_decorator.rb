@@ -35,10 +35,6 @@ module Spree
       end
     end
 
-    def interest
-      Spree::Interest.new(order: self, payment_method: payment.payment_method)
-    end
-
     private
 
     def total_with_interest
@@ -46,6 +42,7 @@ module Spree
     end
 
     def compound_interest
+      byebug
       interest = payment.interest > 0 ? payment.interest : 0
       (1 + payment.interest)**payment.installments
     end
