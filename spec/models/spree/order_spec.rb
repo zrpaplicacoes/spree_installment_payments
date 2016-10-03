@@ -34,10 +34,24 @@ describe Spree::Order do
 	  end
 
 	  describe 'if my installment in this order is valid' do
-	    let(:order) { create(:order, payment: valid_payment)}
-	    it 'returns the order instance' do
-	  		expect(order.valid_installments?).to be_an_instance_of(Spree::Order)
-	    end
+      let(:order_in_6_installments) { build(:order, total: 100, has_installments: true,
+        payments: [ build(:payment, interest: 0.01, installments: 6) ],
+      )}
+
+	    let(:order_in_3_installments) { build(:order, total: 100, has_installments: true,
+        payments: [ build(:payment, interest: 0.01, installments: 3) ],
+      )}
+
+      it 'displays total with compound interest' do
+        expect(order_in_6_installments.display_total_with_interest).to eq "$106.15"
+        expect(order_in_3_installments.display_total_with_interest).to eq "$103.03"
+      end
+
+      it 'displays the amount for each month' do
+        expect(order_in_6_installments.display_installment_with_interest).to eq "$17.69"
+        expect(order_in_3_installments.display_installment_with_interest).to eq "$34.34"
+      end
+
 	  end
 
   end

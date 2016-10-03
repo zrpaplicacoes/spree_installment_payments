@@ -13,15 +13,25 @@ module Spree
     end
 
     def display_total_with_interest
-      Spree::Money.new(total * (1 + payment.interest), { currency: currency })
+      Spree::Money.new(total_with_interest, { currency: currency }).to_s
     end
 
     def display_installment_with_interest
-      Spree::Money.new(((total * payment.interest)/ payment.installments), { currency: currency } )
+      Spree::Money.new(total_with_interest / payment.installments, { currency: currency }).to_s
     end
 
     def interest
       Spree::Interest.new(order: self, payment_method: payment.payment_method)
+    end
+
+    private
+
+    def total_with_interest
+      total * compound_interest
+    end
+
+    def compound_interest
+      (1 + payment.interest)**payment.installments
     end
 
   end
