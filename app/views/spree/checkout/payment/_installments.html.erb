@@ -1,9 +1,9 @@
-<%- interest = Spree::Interest.new order: @order, payment_method: payment_method %>
-<%- if interest.available_installments? %>
+<%- interest = Spree::Interest.find_by_payment_method(payment_method) %>
+<%- if payment_method.installment? %>
   <p class="field" data-hook="installments">
       <%= label_tag "installments_on_card_#{payment_method.id}" do %>
         <%= Spree.t(:installments) %>
       <% end %>
-      <%= select_tag "#{param_prefix}[installments]", options_for_select(interest.format_options_for_select), id: "installments_on_card_#{payment_method.id}", class: "form-control select2" %>
+      <%= select_tag "#{param_prefix}[installments]", options_for_select(payment_method.format_options_for_select), id: "installments_on_card_#{payment_method.id}", class: "form-control select2" %>
   </p>
 <% end %>
