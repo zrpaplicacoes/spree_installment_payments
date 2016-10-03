@@ -1,6 +1,8 @@
 SpreeInstallmentPayments
 ========================
 
+[![build status](https://gitlab.com/zrpaplicacoes/spree_installment_payments/badges/dev/build.svg)](https://gitlab.com/zrpaplicacoes/spree_installment_payments/commits/dev)[![coverage report](https://gitlab.com/zrpaplicacoes/spree_installment_payments/badges/dev/coverage.svg)](https://gitlab.com/zrpaplicacoes/spree_installment_payments/commits/dev)
+
 Introduction goes here.
 
 Installation
