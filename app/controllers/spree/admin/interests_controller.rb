@@ -3,11 +3,6 @@ module Spree
     class InterestsController < ResourceController
       before_action :load_data, except: [:index]
 
-      def create
-        byebug
-        super
-      end
-
       private
 
       def collection
