@@ -20,7 +20,7 @@
         </div>
         <div data-hook="payment-method" class='form-group'>
           <%= label_tag :payment_method %>
-          <%= collection_select(:zone_interest, :payment_method_id, payment_methods, :id, :name, {}, { id: 'pymt-method', class: 'select2'}) unless payment_methods.empty? %>
+          <%= collection_select(:interest, :payment_method_id, payment_methods, :id, :name, {}, { id: 'pymt-method', class: 'select2'}) unless payment_methods.empty? %>
           <% if (payment_methods.empty? && can?(:create, Spree::PaymentMethod)) %>
             <div class="alert alert-info no-objects-found">
               <%= Spree.t(:no_resource_found, resource: plural_resource_name(Spree::PaymentMethod)) %>!

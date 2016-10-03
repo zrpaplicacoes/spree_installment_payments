@@ -9,15 +9,6 @@ module Spree
 
     delegate *[:accept_installments?, :max_number_of_installments, :charge_interest ], to: :payment_method
 
-    validate :valid_installments?
-
-    def valid_installments?
-      remove_payment_source_installments unless payment_method.accept_installments?
-      self.installments = payment_source.installments
-      interest = Spree::Interest.new(order: order, payment_method: payment_method)
-      accepted_installment_number?(interest) ? true : add_error_and_invalidate_payment(:installments, :invalid)
-    end
-
     private
 
     def update_source_with_charge_interest

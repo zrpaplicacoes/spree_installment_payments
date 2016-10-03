@@ -1,5 +1,6 @@
 module Spree
   Order.class_eval do
+
     def set_installments
       self.has_installments = payment.valid_installments? && payment.installments > 1
       payment.interest = interest.retrieve.round(4) if !interest.retrieve.nil? && interest.retrieve > 0
@@ -28,23 +29,24 @@ module Spree
     end
 
     def display_total_per_installment
-      if has_installments?
-        Spree::Money.new(total_with_interest / payment.installments, { currency: currency }).to_s
-      else
-        Spree::Money.new(total_with_interest, { currency: currency }).to_s
-      end
+      Spree::Money.new(total_per_installment, { currency: currency }).to_s
     end
 
     private
 
-    def total_with_interest
-      total * compound_interest
+    def total_per_installment
+      factor = has_installments? ? (1.0 / payment.installments) : 1.0
+      total_with_interest * factor
     end
 
-    def compound_interest
-      byebug
-      interest = payment.interest > 0 ? payment.interest : 0
-      (1 + payment.interest)**payment.installments
+    def total_with_interest
+      total * interest_adjustment
+    end
+
+    def interest_adjustment
+      #
+      # (1 + payment.interest)**payment.installments
+      1
     end
 
   end
