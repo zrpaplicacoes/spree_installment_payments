@@ -10,7 +10,10 @@ before_script:
   - mkdir -p /cache/apt
   - mkdir -p /cache/node_modules
   - mkdir -p /cache/gems
-  - apt-get update -qq && apt-get -o dir::cache::archives="/cache/apt" install -y -qq sqlite3 libsqlite3-dev
+  - apt-get update -qq && apt-get -o dir::cache::archives="/cache/apt" install -y -qq nodejs npm sqlite3 libsqlite3-dev
+  - ln -s /usr/bin/nodejs /usr/bin/node
+  - npm install npm@latest -g
+  - npm install -g phantomjs
 
 stages:
   - specs
