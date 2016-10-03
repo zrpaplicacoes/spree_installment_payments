@@ -1,6 +1,6 @@
 module Spree
   Order.class_eval do
-    def valid_installments?
+    def set_installments
       self.update(has_installments: payment.installments > 1) if payment.valid_installments?
     end
 
@@ -36,6 +36,6 @@ module Spree
 
   end
 
-  Order.state_machine.before_transition to: :confirm, do: :valid_installments?
+  Order.state_machine.before_transition to: :confirm, do: :set_installments
   Order.state_machine.before_transition to: :confirm, do: :lock_payment_interest
 end

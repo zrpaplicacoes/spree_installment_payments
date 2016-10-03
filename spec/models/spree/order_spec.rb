@@ -12,29 +12,28 @@ describe Spree::Order do
     expect(subject.new.has_installments).to be_falsy
   end
 
-  describe '#valid_installments' do
-  	let(:valid_payment) { create(:payment, payment_method: create(:credit_card_with_installments))}
-  	let(:invalid_payment) { create(:payment, payment_method: create(:credit_card_with_installments, max_number_of_installments: 1))}
+  describe '#set_installments' do
 
-	  describe 'if the installment is not valid' do
-	    let(:order) { create(:order_with_line_items)}
+	  context 'when order without installments' do
+      let(:order) { build(:order, total: 100,
+        payments: [ build(:payment, interest: 0.01, installments: 1) ],
+      )}
 
-    	before :each do
-	  		order.billing_address = create(:address)
-	  		order.billing_address.state.zones << create(:zone, max_number_of_installments: 8, base_value: 40)
-	  		order.billing_address.state.save
-	  		order.reload
-        order.payment = invalid_payment
-        order.payment.save
+	  	it 'returns false' do
+	  		expect(order.set_installments).to be_falsy
 	  	end
 
-	  	it 'returns nil' do
-	  		expect(order.valid_installments?).to be_nil
-	  	end
+      it 'displays total without interest' do
+        expect(order.display_total_with_interest).to eq "$100.00"
+      end
+
+      it 'displays installments with interests as empty' do
+        expect(order.display_total_with_interest).to eq ""
+      end
 	  end
 
-	  describe 'if my installment in this order is valid' do
-      let(:order_in_6_installments) { build(:order, total: 100, has_installments: true,
+	  context 'when order with installments' do
+      let(:order_in_6_installments) { build(:order, total: 100,
         payments: [ build(:payment, interest: 0.01, installments: 6) ],
       )}
 
