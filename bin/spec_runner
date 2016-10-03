@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Uncomment if redis is required
+# apt-get install -qq -y redis-server
+# redis-server&
+
+cat > ~/.gemrc <<-EOM
+  install: --no-rdoc --no-ri
+  update:  --no-rdoc --no-ri
+EOM
+
+bundle install --jobs $(nproc) --path /cache/gems
+
+bundle exec rake test_app
+bundle exec brakeman -zAq
+rails db:environment:set RAILS_ENV=test
+RAILS_ENV=test bundle exec rake db:create db:migrate
+RAILS_ENV=test rspec .

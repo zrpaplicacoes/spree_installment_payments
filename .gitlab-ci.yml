@@ -18,4 +18,4 @@ stages:
 specs:
   stage: specs
   script:
-  - ./bin/specs_backend
+  - ./bin/spec_runner
