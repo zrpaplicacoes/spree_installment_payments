@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :zone_interest, class: Spree::ZoneInterest do
-    interest 0.005 # 0.5%
+    interest 0.01 # 1%
     start_number_of_installments 2
     end_number_of_installments 8
     zone { create(:zone, max_number_of_installments: 8, base_value: 5) }

@@ -11,7 +11,6 @@ module Spree
 
     validate :valid_installments?
 
-
     def valid_installments?
       remove_payment_source_installments unless payment_method.accept_installments?
       self.installments = payment_source.installments
