@@ -1,0 +1,21 @@
+image: ruby:2.3.1
+
+cache:
+  paths:
+  - /cache/apt
+  - /cache/node_modules
+  - /cache/gems
+
+before_script:
+  - mkdir -p /cache/apt
+  - mkdir -p /cache/node_modules
+  - mkdir -p /cache/gems
+  - apt-get update -qq && apt-get -o dir::cache::archives="/cache/apt" install -y -qq sqlite3 libsqlite3-dev
+
+stages:
+  - specs
+
+specs:
+  stage: specs
+  script:
+  - ./bin/specs_backend
