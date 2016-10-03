@@ -1,0 +1,53 @@
+<div class="row">
+  <div class="col-md-6" data-hook="admin_interest_form_fields">
+    <div class="panel panel-default">
+
+      <div class="panel-heading">
+        <h1 class="panel-title"><%= Spree.t(:general_settings)%></h1>
+      </div>
+
+      <div class="panel-body">
+        <div data-hook="name" class="form-group">
+          <%= label_tag :name %>
+          <%= interest_form.text_field(:name, class: "form-control") %>
+        </div>
+        <div data-hook="value" class='form-group'>
+          <%= label_tag :value %>
+          <%= interest_form.number_field(:value, class: "form-control", step: 0.0001, in: 0..1) %>
+          <p class="help-block">
+            <%= Spree.t(:interest_explanation) %>
+          </p>
+        </div>
+        <div data-hook="payment-method" class='form-group'>
+          <%= label_tag :payment_method %>
+          <%= collection_select(:zone_interest, :payment_method_id, payment_methods, :id, :name, {}, { id: 'pymt-method', class: 'select2'}) unless payment_methods.empty? %>
+          <% if (payment_methods.empty? && can?(:create, Spree::PaymentMethod)) %>
+            <div class="alert alert-info no-objects-found">
+              <%= Spree.t(:no_resource_found, resource: plural_resource_name(Spree::PaymentMethod)) %>!
+              </br>
+              <%= link_to(Spree.t(:create_payment_method), new_admin_payment_method_path, class: "") %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="col-md-6" data-hook="admin_interest_form_fields">
+    <div class="panel panel-default">
+
+      <div class="panel-heading">
+        <h1 class="panel-title"><%= Spree.t(:range_settings)%></h1>
+      </div>
+
+      <div class="panel-body">
+        <div data-hook="range" class="form-group">
+          <%= label_tag :number_of_installments %>
+          <%= interest_form.number_field(:number_of_installments, class: "form-control", min: 1) %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

@@ -1,6 +1,6 @@
 module Spree
   module Admin
-    class ZoneInterestsController < ResourceController
+    class InterestsController < ResourceController
       before_action :load_data, except: [:index]
 
       private
@@ -13,9 +13,8 @@ module Spree
       end
 
       def load_data
-        @zones = Zone.order(:name)
         @payment_methods = PaymentMethod.order(:name)
-        @zone_interests = ZoneInterest.order(:name)
+        @interests = Interest.order(:name)
       end
 
     end
