@@ -2,21 +2,21 @@ module Spree
   Order.class_eval do
 
     def set_installments
-      self.has_installments = payment.valid_installments? && payment.installments > 1
-      payment.interest = interest.retrieve.round(4) if !interest.retrieve.nil? && interest.retrieve > 0
-      payment.amount = total_with_interest
+      # self.has_installments = payment.valid_installments? && payment.installments > 1
+      # payment.interest = interest.retrieve.round(4) if !interest.retrieve.nil? && interest.retrieve > 0
+      # payment.amount = total_with_interest
     end
 
     def save_installments
-      begin
-        ActiveRecord::Base.transaction do
-          self.save! && payment.save!
-        end
-        true
-      rescue StandardError
-        errors.add(:payments, I18n.t('activerecord.errors.invalid_payment'))
-        false
-      end
+      # begin
+      #   ActiveRecord::Base.transaction do
+      #     self.save! && payment.save!
+      #   end
+      #   true
+      # rescue StandardError
+      #   errors.add(:payments, I18n.t('activerecord.errors.invalid_payment'))
+      #   false
+      # end
     end
 
     def payment
@@ -35,8 +35,7 @@ module Spree
     private
 
     def total_per_installment
-      factor = has_installments? ? (1.0 / payment.installments) : 1.0
-      total_with_interest * factor
+      (total / ( payment.installments >= 1 ? payment.installments : 1 )) * interest_adjustment
     end
 
     def total_with_interest
@@ -44,9 +43,7 @@ module Spree
     end
 
     def interest_adjustment
-      #
-      # (1 + payment.interest)**payment.installments
-      1
+      (1 + payment.interest)**payment.installments
     end
 
   end

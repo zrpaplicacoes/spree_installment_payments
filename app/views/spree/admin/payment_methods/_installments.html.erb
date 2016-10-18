@@ -3,22 +3,25 @@
     <%= f.check_box(:accept_installments) %>
     <%= label_tag :accept_installments %>
   </div>
-  <div>
-    <%= f.check_box(:charge_interest) %>
-    <%= label_tag :charge_interest %>
-    <p class="help-block">
-      <%= Spree.t(:charge_interest_explanation) %>
-    </p>
-  </div>
-  <div>
-    <%= label_tag :max_number_of_installments %>
-    <%= f.number_field(:max_number_of_installments, min: 1, in: 1..120, step: 1, class: "form-control", id: "max_number_of_installments") %>
-  </div>
-  <div>
-    <%= label_tag :base_value %>
-    <%= f.number_field(:base_value, min: 1, in: 1..10000, step: 1, class: "form-control", id: "base_value") %>
-    <p class="help-block">
-      <%= Spree.t(:base_value_explanation) %>
-    </p>
-  </div>
+
+  <%- if @payment_method.accept_installments? %>
+    <div>
+      <%= f.check_box(:charge_interest) %>
+      <%= label_tag :charge_interest %>
+      <p class="help-block">
+        <%= Spree.t(:charge_interest_explanation) %>
+      </p>
+    </div>
+    <div>
+      <%= label_tag :max_number_of_installments %>
+      <%= f.number_field(:max_number_of_installments, min: 1, in: 1..120, step: 1, class: "form-control", id: "max_number_of_installments") %>
+    </div>
+    <div>
+      <%= label_tag :base_value %>
+      <%= f.number_field(:base_value, min: 1, in: 1..10000, step: 1, class: "form-control", id: "base_value") %>
+      <p class="help-block">
+        <%= Spree.t(:base_value_explanation) %>
+      </p>
+    </div>
+  <% end %>
 </div>

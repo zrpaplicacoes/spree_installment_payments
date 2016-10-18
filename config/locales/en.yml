@@ -4,10 +4,10 @@
 en:
   spree:
     of: of
-    no_installments_without_interest: "%{total} without installments (no interest)"
-    installments_without_interest: "%{total} (%{installments} x %{per_item}) (no interest)"
-    no_installments_with_interest: "%{total} without installments (%{interest} monthly)"
-    installments_with_interest: "%{total} (%{installments} x %{per_item}) (%{interest} monthly)"
+    no_installment_without_interest: "%{total} without installments (no interest)"
+    installment_without_interest: "%{total} (%{installment} x %{per_month}) (no interest)"
+    no_installment_with_interest: "%{total} without installments (%{interest} monthly)"
+    installment_with_interest: "%{total} (%{installment} x %{per_month}) (%{interest} monthly)"
     interests: Interests
     max_number_of_installments: Maximum number of installments
     base_value: Base value for installment
@@ -17,6 +17,7 @@ en:
     create_payment_method: Create a new payment method!
     create_zone: Create a new zone!
     interest_adjustment_label: 'Order total (with interest of %{interest}%):'
+    installment_adjustment_label: 'Cost per month (with %{installment} installments):'
     calculators:
       interest_calculator: Calculates the interest amount of a given order, considering the interest a tax rate
   activerecord:
