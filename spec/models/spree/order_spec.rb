@@ -6,12 +6,15 @@ describe Spree::Order do
   context "when invalid installments" do
     before :each do
       allow_any_instance_of(Spree::Order).to receive(:valid_installments?).and_return(false)
+      @order = subject.new(total: 100)
+      @payment_method = create(:credit_card_with_installments)
+      @interest = create(:interest, value: 0.01, payment_method: @payment_method, number_of_installments: 3)
+      @order.payments << build(:payment, installments: 3, payment_method: @payment_method, amount: 100)
+      @order.save_payment_with_installments
     end
 
     it 'adds an error to the model' do
-      order = subject.new
-      order.save_payment_with_installments
-      expect(order.errors[:payments]).to match_array ["Invalid number of installments not allowed!"]
+      expect(@order.errors[:payments]).to match_array ["Invalid number of installments not allowed!"]
     end
   end
 
