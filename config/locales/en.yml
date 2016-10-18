@@ -8,11 +8,11 @@ en:
     installments_without_interest: "%{total} (%{installments} x %{per_item}) (no interest)"
     no_installments_with_interest: "%{total} without installments (%{interest} monthly)"
     installments_with_interest: "%{total} (%{installments} x %{per_item}) (%{interest} monthly)"
-    zone_interests: Zone Interests
+    interests: Interests
     max_number_of_installments: Maximum number of installments
     base_value: Base value for installment
-    interest_explanation: Interest defines the tax charged in an order based on installments, so if you want a 5% tax, you should set 0.05
-    base_value_explanation: "Base Value defines the minimum value used in installment. Ex: If a product cost U$120,00 and the base value is U$40,00 it can be installment in 3 times"
+    interest_explanation: Interest defines the tax charged in an order based on installments, so if you want a 0.99% tax, you should set 0.0099
+    base_value_explanation: "Base Value defines the minimum value used in an installment. E.g: if a product costs $120.00 and the base value is $40.00, it can be payed in 3 times"
     charge_interest_explanation: Charge interest defines if the interest is store based or buyer based. Set this to true if you want taxes to be passed to your buyer gateway.
     create_payment_method: Create a new payment method!
     create_zone: Create a new zone!

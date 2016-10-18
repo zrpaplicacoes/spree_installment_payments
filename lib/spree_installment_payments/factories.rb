@@ -1,2 +1,2 @@
 require_relative 'testing_support/factories/payment_method_factory'
-require_relative 'testing_support/factories/zone_interest_factory'
+require_relative 'testing_support/factories/interest_factory'
