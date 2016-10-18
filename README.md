@@ -38,4 +38,4 @@ Simply add this require statement to your spec_helper:
 require 'spree_installment_payments/factories'
 ```
 
-Copyright (c) 2016 [name of extension creator], released under the New BSD License
+Copyright (c) 2016 ZRP Aplicações Informáticas LTDA, released under the New BSD License
