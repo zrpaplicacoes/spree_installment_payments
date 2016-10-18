@@ -2,7 +2,7 @@
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_installment_payments'
-  s.version     = '3.0.7'
+  s.version     = '0.0.1'
   s.summary     = 'A gem to include installment payments on Spree'
   s.description = 'A gem to include installment payments on Spree'
   s.required_ruby_version = '>= 2.0.0'
