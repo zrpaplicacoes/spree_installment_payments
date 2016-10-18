@@ -1,0 +1,50 @@
+<% content_for :page_title do %>
+  <%= Spree.t(:interests) %>
+<% end %>
+
+<% content_for :page_actions do %>
+  <%= button_link_to Spree.t(:new_interest), new_object_url, class: "btn-success", icon: 'add', id: 'admin_new_interest_link' %>
+<% end if can? :create, Spree::Interest %>
+
+<%= paginate @interests if @interests.any? %>
+
+<% if @interests.any? %>
+  <table class="table" id='listing_zones' data-hook>
+    <thead>
+      <tr data-hook="zones_header">
+        <th><%= sort_link @search,:name, Spree.t(:name), title: 'interests_order_by_name' %></th>
+        <th>
+          <%= sort_link @search,:value, Spree.t(:value), {}, {title: 'interests_order_by_value'} %>
+        </th>
+        <th>
+          <%= sort_link @search,:number_of_installments, Spree.t(:number_of_installments), {}, {title: 'interests_order_by_number_of_installments'} %>
+        </th>
+        <th>
+          <%= sort_link @search,:payment_method, Spree.t(:payment_method), {}, {title: 'interests_order_by_payment_method'} %>
+        </th>
+        <th class="actions"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @interests.each do |interest| %>
+        <tr id="<%= spree_dom_id interest %>" data-hook="interests_row">
+          <td><%= interest.name %></td>
+          <td><%= interest.percentage %></td>
+          <td><%= interest.number_of_installments %></td>
+          <td><%= interest.payment_method.name %></td>
+          <td class="actions actions-2 text-right">
+            <%= link_to_edit(interest, no_text: true) if can? :edit, interest %>
+            <%= link_to_delete(interest, no_text: true) if can? :delete, interest %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div class="alert alert-info no-objects-found">
+    <%= Spree.t(:no_resource_found, resource: plural_resource_name(Spree::Interest)) %>,
+    <%= link_to(Spree.t(:add_one), new_object_url) if can? :create, Spree::Interest %>!
+  </div>
+<% end %>
+
+<%= paginate @interests %>

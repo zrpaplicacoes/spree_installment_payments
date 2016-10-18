@@ -1,0 +1,6 @@
+pt-BR:
+  activerecord:
+    errors:
+      invalid_range: "%{start} to %{end} does not configure a valid range"
+      limit_overflow: "%{value} overflows the established limit of %{limit}"
+      overlap: "The specified interval %{defined_interval} overlaps the interval %{interval}"

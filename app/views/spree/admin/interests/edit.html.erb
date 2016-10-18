@@ -1,0 +1,10 @@
+<% content_for :page_title do %>
+  <%= link_to Spree.t(:interests), spree.admin_interests_url %> /
+  <%= @interest.name %>
+<% end %>
+
+<%= form_for [:admin, @interest] do |interest_form| %>
+  <%= render partial: 'form', locals: { interest_form: interest_form, payment_methods: @payment_methods } %>
+
+  <%= render partial: 'spree/admin/shared/edit_resource_links' %>
+<% end %>

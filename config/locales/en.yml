@@ -2,4 +2,30 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  spree:
+    of: of
+    invalid_number_of_installments: "Invalid number of installments not allowed!"
+    no_installment_without_interest: "%{total} without installments (no interest)"
+    installment_without_interest: "%{total} (%{installment} x %{per_month}) (no interest)"
+    no_installment_with_interest: "%{total} without installments (%{interest} monthly)"
+    installment_with_interest: "%{total} (%{installment} x %{per_month}) (%{interest} monthly)"
+    interests: Interests
+    max_number_of_installments: Maximum number of installments
+    base_value: Base value for installment
+    interest_explanation: Interest defines the tax charged in an order based on installments, so if you want a 0.99% tax, you should set 0.0099
+    base_value_explanation: "Base Value defines the minimum value used in an installment. E.g: if a product costs $120.00 and the base value is $40.00, it can be payed in 3 times"
+    charge_interest_explanation: Charge interest defines if the interest is store based or buyer based. Set this to true if you want taxes to be passed to your buyer gateway.
+    create_payment_method: Create a new payment method!
+    create_zone: Create a new zone!
+    interest_adjustment_label: 'Order total (with interest of %{interest}%):'
+    installment_adjustment_label: 'Cost per month (with %{installment} installments):'
+    calculators:
+      interest_calculator: Calculates the interest amount of a given order, considering the interest a tax rate
+  activerecord:
+    errors:
+      invalid_range: "%{start} to %{end} does not configure a valid range"
+      limit_overflow: "%{value} overflows the established limit of %{limit}"
+      overlap: "The specified interval %{defined_interval} overlaps the interval %{interval}"
+      invalid_number_of_installments: "The order payment could not be split into %{number_of_installments} installments, since the max number of installments allowed for the selected payment  methods and order total is %{max_allowed}"
+      non_installment_order: "The order payment could not be split because the payment method or the selected zone for the order could not installment payments"
+      invalid_payment: "The options for payment are not valid!"
