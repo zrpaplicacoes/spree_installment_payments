@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe 'Spree::ZoneInterest' do
-  subject { Spree::ZoneInterest }
+describe 'Spree::Interest' do
+  subject { Spree::Interest }
 
   it 'belongs to zone' do
     expect(subject.new.respond_to? :zone).to be_truthy

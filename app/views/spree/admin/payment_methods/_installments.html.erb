@@ -14,4 +14,8 @@
     <%= label_tag :max_number_of_installments %>
     <%= f.number_field(:max_number_of_installments, min: 1, in: 1..120, step: 1, class: "form-control", id: "max_number_of_installments") %>
   </div>
+  <div>
+    <%= label_tag :base_value %>
+    <%= f.number_field(:base_value, min: 1, in: 1..10000, step: 50, class: "form-control", id: "base_value") %>
+  </div>
 </div>

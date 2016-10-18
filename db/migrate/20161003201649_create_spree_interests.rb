@@ -4,7 +4,7 @@ class CreateSpreeInterests < ActiveRecord::Migration
       t.string :name
       t.integer :number_of_installments
       t.integer :payment_method_id, null: false
-      t.decimal :value, precision: 8, scale: 2, default: 0.0
+      t.decimal :value, precision: 10, scale: 4, default: 0.0
       t.timestamps null: false
     end
   end
