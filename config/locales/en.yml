@@ -4,6 +4,7 @@
 en:
   spree:
     of: of
+    invalid_number_of_installments: "Invalid number of installments not allowed!"
     no_installment_without_interest: "%{total} without installments (no interest)"
     installment_without_interest: "%{total} (%{installment} x %{per_month}) (no interest)"
     no_installment_with_interest: "%{total} without installments (%{interest} monthly)"

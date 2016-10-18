@@ -2,192 +2,50 @@ require 'rails_helper'
 
 describe Spree::Order do
   subject { Spree::Order }
-  let(:valid_installments) { true }
-  let(:interest) { 0 }
 
-  before :each do
-    allow_any_instance_of(Spree::Payment).to receive(:valid_installments?).and_return(valid_installments)
-    allow_any_instance_of(Spree::Order).to receive(:interest).and_return(OpenStruct.new(retrieve: interest))
-  end
-
-  it 'has a has_installments property' do
-    expect(subject.new.respond_to? :has_installments).to be_truthy
-  end
-
-  it 'sets has_installments to false' do
-    expect(subject.new.has_installments).to be_falsy
-  end
-
-  describe "#display_total_per_installment" do
+  context "when invalid installments" do
     before :each do
-      order.set_installments
+      allow_any_instance_of(Spree::Order).to receive(:valid_installments?).and_return(false)
     end
 
-    context "when order without installments" do
-      let(:order) { build(:order, total: 100, payments: [ build(:payment, installments: 1, amount: 100) ] )}
-
-      context "with interest" do
-        let(:interest) { 0.01 }
-        it { expect(order.display_total_per_installment).to eq "$101.00" }
-      end
-
-      context "without interest" do
-        let(:interest) { 0.0 }
-        it { expect(order.display_total_per_installment).to eq "$100.00" }
-      end
-
+    it 'adds an error to the model' do
+      order = subject.new
+      order.save_payment_with_installments
+      expect(order.errors[:payments]).to match_array ["Invalid number of installments not allowed!"]
     end
-
-    context "when order with installments" do
-      let(:order) { build(:order, total: 100, payments: [ build(:payment, installments: 6, amount: 100) ] )}
-
-      context "with interest" do
-        let(:interest) { 0.01 }
-        it { expect(order.display_total_per_installment).to eq "$17.69" }
-      end
-
-      context "without interest" do
-        it { expect(order.display_total_per_installment).to eq "$16.67" }
-      end
-    end
-
   end
 
-  describe "#display_total" do
+  context "when valid installments" do
+
     before :each do
-      order.set_installments
+      allow_any_instance_of(Spree::Order).to receive(:valid_installments?).and_return(true)
+      @order = subject.new(total: 100)
+      @payment_method = create(:credit_card_with_installments)
+      @interest = create(:interest, value: 0.01, payment_method: @payment_method, number_of_installments: 3)
+      @order.payments << build(:payment, installments: 3, payment_method: @payment_method, amount: 100)
+      @order.save_payment_with_installments
     end
 
-    context "when order without installments" do
-      let(:order) { build(:order, total: 100, payments: [ build(:payment, installments: 1, amount: 100) ] )}
-
-      context "with interest" do
-        let(:interest) { 0.01 }
-        it { expect(order.display_total).to eq "$101.00" }
-      end
-
-      context "without interest" do
-        it { expect(order.display_total).to eq "$100.00" }
-      end
-
+    it 'does not add an error to the model' do
+      expect(@order.errors[:payments]).to be_empty
     end
 
-    context "when order with installments" do
-      let(:order) { build(:order, total: 100, payments: [ build(:payment, installments: 6, amount: 100) ] )}
+    it 'updates the payment with the payment method specifications' do
+      expect(@order.payment.interest).to eq @interest.value
+      expect(@order.payment.charge_interest).to eq @payment_method.charge_interest
+      expect(@order.payment.installments).to eq 3
+      # ( 100 * ( 1.01 )**3 )  - 100 => 3.03
+      expect(@order.payment.interest_amount).to eq 3.03
+    end
 
-      context "with interest" do
-        let(:interest) { 0.01 }
-        it { expect(order.display_total).to eq "$106.15" }
-      end
+    it 'displays total with interest' do
+      expect(@order.display_total_with_interest).to eq "$103.03"
+    end
 
-      context "without interest" do
-        it { expect(order.display_total).to eq "$100.00" }
-      end
+    it 'displays total per installment' do
+      expect(@order.display_total_per_installment).to eq "$34.34"
     end
 
   end
-
-  describe '#set_installments' do
-    before :each do
-      order.set_installments
-    end
-
-	  context 'when order without installments' do
-      let(:order) { build(:order, total: 100, payments: [ build(:payment, installments: 1, amount: 100) ] )}
-
-	  	it 'sets order has_installments to false' do
-        expect(order.has_installments?).to be_falsy
-	  	end
-
-      context "with interest" do
-        let(:interest) { 0.01 }
-
-        it 'updates payment interest to interest rounded to 4 decimal places' do
-          expect(order.payment.interest.to_s).to eq "0.01"
-        end
-
-        it 'updates payment total to eq order total with interest' do
-          expect(order.payment.amount.to_s).to eq "101.0"
-        end
-      end
-
-      context "without interest" do
-
-        it 'sets the payment interest to nil' do
-          expect(order.payment.interest.to_s).to eq "0.0"
-        end
-
-        it 'does not change the payment total' do
-          expect(order.payment.amount.to_s).to eq "100.0"
-        end
-      end
-
-
-	  end
-
-	  context 'when order with installments' do
-      let(:order) { build(:order, total: 100, payments: [ build(:payment, installments: 6, amount: 100) ] )}
-
-      it 'sets order has_installments to true' do
-        expect(order.has_installments?).to be_truthy
-      end
-
-      context "with interest" do
-        let(:interest) { 0.01 }
-
-        it 'updates payment interest to interest rounded to 4 decimal places' do
-          expect(order.payment.interest.to_s).to eq "0.01"
-        end
-
-        it 'updates payment total to eq order total with interest' do
-          expect(order.payment.amount.to_s).to eq "106.15"
-        end
-      end
-
-      context "without interest" do
-
-        it 'sets the payment interest to nil' do
-          expect(order.payment.interest.to_s).to eq "0.0"
-        end
-
-        it 'does not change de payment total' do
-          expect(order.payment.amount.to_s).to eq "100.0"
-        end
-      end
-	  end
-
-  end
-
-  describe '#save_installments' do
-
-    context "when save is performed" do
-      let(:order) { build(:order, total: 100, payments: [ build(:payment, installments: 1, amount: 100) ] )}
-
-      it 'returns true' do
-        allow_any_instance_of(Spree::Payment).to receive(:save!).and_return(true)
-        allow_any_instance_of(Spree::Order).to receive(:save!).and_return(true)
-        expect(order.save_installments).to be_truthy
-      end
-    end
-
-    context "when save fails" do
-      let(:order) { build(:order, total: 100) }
-
-      before :each do
-        allow_any_instance_of(Spree::Payment).to receive(:save!).and_return(true)
-        allow_any_instance_of(Spree::Order).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
-      end
-
-      it 'returns false' do
-        expect(order.save_installments).to be_falsy
-      end
-
-      it 'adds an error to order payments' do
-        order.save_installments
-        expect(order.errors.messages[:payments].first).to eq "The options for payment are not valid!"
-      end
-    end
-  end
-
 
 end
