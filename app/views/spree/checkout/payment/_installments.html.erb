@@ -5,6 +5,6 @@
       <%= label_tag "installments_on_card_#{payment_method.id}" do %>
         <%= Spree.t(:installments) %>
       <% end %>
-      <%= select_tag "#{param_prefix}[installments]", options_for_select(payment_method.format_options_for_select(@order)), id: "installments_on_card_#{payment_method.id}", class: "form-control select2" %>
+      <%= select_tag "order[payments_attributes][][installments]", options_for_select(payment_method.format_options_for_select(@order)), id: "installments_on_card_#{payment_method.id}", class: "form-control select2" %>
   </p>
 <% end %>

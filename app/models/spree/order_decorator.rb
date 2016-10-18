@@ -1,22 +1,17 @@
 module Spree
   Order.class_eval do
 
-    def set_installments
-      # self.has_installments = payment.valid_installments? && payment.installments > 1
-      # payment.interest = interest.retrieve.round(4) if !interest.retrieve.nil? && interest.retrieve > 0
-      # payment.amount = total_with_interest
+    def save_payment_with_installments
+      byebug
+      errors.add(:total, Spree.t(:invalid_number_of_installments)) and return unless valid_installments?
+      payment.interest = payment.payment_method.interest_value_for(payment.installments)
+      payment.charge_interest = payment.payment_method.charge_interest
+      payment.interest_amount = (total_with_interest - total)
+      payment.save
     end
 
-    def save_installments
-      # begin
-      #   ActiveRecord::Base.transaction do
-      #     self.save! && payment.save!
-      #   end
-      #   true
-      # rescue StandardError
-      #   errors.add(:payments, I18n.t('activerecord.errors.invalid_payment'))
-      #   false
-      # end
+    def valid_installments?
+      payment.installments >= 1 && payment.installments <= payment.payment_method.max_number_of_installments
     end
 
     def payment
@@ -24,7 +19,7 @@ module Spree
       @payment = self.payments.last
     end
 
-    def display_total
+    def display_total_with_interest
       Spree::Money.new(total_with_interest, { currency: currency }).to_s
     end
 
@@ -48,6 +43,5 @@ module Spree
 
   end
 
-  Order.state_machine.before_transition to: :confirm, do: :set_installments
-  Order.state_machine.before_transition to: :confirm, do: :save_installments
+  Order.state_machine.before_transition to: :confirm, do: :save_payment_with_installments
 end

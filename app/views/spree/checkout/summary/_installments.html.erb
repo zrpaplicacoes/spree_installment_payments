@@ -15,7 +15,7 @@
       <b><%= I18n.t('spree.interest_adjustment_label', interest: ( order.payment.interest * 100 )) %></b>
     </td>
     <td class="total">
-      <span class="lead text-primary"><%= order.display_total %></span>
+      <span class="lead text-primary"><%= order.display_total_with_interest %></span>
     </td>
   </tr>
 <% end %>
