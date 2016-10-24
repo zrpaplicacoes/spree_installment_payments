@@ -1,2 +1,2 @@
 <th> <%= order.payment.nil? ? 1 : order.payment.installments %> </th>
-<th> <%= order.payment.nil? ? h.content_tag(:span, '-', class: "label label-considered_safe") : order.payment.charge_interest_label %> </th>
+<th> <%= order.payment.nil? ? content_tag(:span, '-', class: "label label-considered_safe") : order.payment.charge_interest_label %> </th>
