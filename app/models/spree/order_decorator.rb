@@ -15,10 +15,6 @@ module Spree
       end
     end
 
-    def valid_installments?
-      payment.installments >= 1 && payment.installments <= payment.payment_method.max_number_of_installments && payment.payment_method.accept_installments?
-    end
-
     def payment
       return @payment if @payment.present?
       @payment = self.payments.last
@@ -51,6 +47,11 @@ module Spree
 
   Order.class_eval do
     prepend Spree::OrderDecorator
+
+    def valid_installments?
+      payment.installments >= 1 && payment.installments <= payment.payment_method.max_number_of_installments && payment.payment_method.accept_installments?
+    end
+
   end
 
   Order.state_machine.before_transition to: :confirm, do: :save_payment_with_installments
