@@ -1,6 +1,6 @@
 module Spree
 
-  module Payment
+  class Payment
     module GatewayOptionsDecorator
       def hash_methods
         [
