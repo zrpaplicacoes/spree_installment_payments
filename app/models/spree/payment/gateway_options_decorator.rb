@@ -34,9 +34,12 @@ module Spree
 
     def interest_adjustment
       begin
-        interest = @payment.payment_method.interest_value_for(installments)
-        @payment.update(interest: interest)
-        @payment.reload
+        if @payment.state == "processing"
+          interest = @payment.payment_method.interest_value_for(installments)
+          @payment.update(interest: interest)
+          @payment.reload
+        end
+
         if charge_interest && @payment.interest.present? && !@payment.interest.zero?
           if @payment.installments.present? && @payment.installments > 1
             (1.0 + @payment.interest)**@payment.installments

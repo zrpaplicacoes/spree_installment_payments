@@ -30,12 +30,12 @@ describe Spree::Payment do
         :payment,
         order: order,
         amount: order.total,
-        state: "completed",
-        installments: 6,
-        interest: 0.01
+        state: "processing",
+        installments: 6
       )
     end
     let(:payment_method) { create(:credit_card_with_installments, :with_charge_interest) }
+    let!(:interest) { create(:interest, payment_method: payment_method) }
 
     before :each do
     	order
@@ -48,7 +48,7 @@ describe Spree::Payment do
 			expect(gateway_options.interest_adjustment > 1).to be_truthy
 			expect(gateway_options_hash[:installments]).to eq 6
 			expect(gateway_options_hash[:charge_interest]).to be_truthy
-			expect(gateway_options_hash[:subtotal].round(2).to_s).to eq "1061.52"
+			expect(gateway_options_hash[:subtotal].round(2).to_s).to eq "1060.89"
 		end
 
 	end
