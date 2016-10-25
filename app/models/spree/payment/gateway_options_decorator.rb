@@ -40,7 +40,7 @@ module Spree
           @payment.reload
         end
 
-        if charge_interest && @payment.interest.present? && !@payment.interest.zero?
+        if chargeInterest && @payment.interest.present? && !@payment.interest.zero?
           if @payment.installments.present? && @payment.installments > 1
             (1.0 + @payment.interest)**@payment.installments
           else
