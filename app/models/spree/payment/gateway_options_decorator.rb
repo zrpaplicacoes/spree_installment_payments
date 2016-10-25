@@ -33,13 +33,20 @@ module Spree
     end
 
     def interest_adjustment
-      if charge_interest && @payment.interest.present? && !@payment.interest.zero?
-        if @payment.installments.present? && @payment.installments > 1
-          (1.0 + @payment.interest)**@payment.installments
+      begin
+        interest = @payment.payment_method.interest_value_for(installments)
+        @payment.update(interest: interest)
+        @payment.reload
+        if charge_interest && @payment.interest.present? && !@payment.interest.zero?
+          if @payment.installments.present? && @payment.installments > 1
+            (1.0 + @payment.interest)**@payment.installments
+          else
+            (1.0 + @payment.interest)
+          end
         else
-          (1.0 + @payment.interest)
+          1.0
         end
-      else
+      rescue NoMethodError
         1.0
       end
     end
