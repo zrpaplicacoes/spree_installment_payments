@@ -51,7 +51,7 @@ module Spree
 
 
     GatewayOptions.class_eval do
-      prepend Spree::GatewayOptionsDecorator
+      prepend Spree::Payment::GatewayOptionsDecorator
     end
   end
 
