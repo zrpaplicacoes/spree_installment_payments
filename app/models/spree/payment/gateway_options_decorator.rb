@@ -16,11 +16,11 @@ module Spree
         :billing_address,
         :shipping_address,
         :installments,
-        :charge_interest
+        :chargeInterest
       ]
     end
 
-    def charge_interest
+    def chargeInterest
       @payment.payment_method.accept_installments? ? @payment.payment_method.charge_interest : false
     end
 
