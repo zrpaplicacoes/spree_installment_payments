@@ -21,29 +21,27 @@ module Spree
     end
 
     def charge_interest
-      @payment.payment_method.charge_interest
+      @payment.payment_method.accept_installments? ? @payment.payment_method.charge_interest : false
     end
 
     def installments
-      @payment.installments || 1
+      @payment.payment_method.accept_installments ? (@payment.installments || 1) : 1
     end
 
-    private
+    def subtotal
+      order.item_total * interest_adjustment * 100
+    end
 
-    def interest_adjusment
-      if @payment.interest.present? && !@payment.interest.zero?
-        if payment.installments.present? && payment.installments > 1
-          (1.0 + @payment.interest)**payment.installments
+    def interest_adjustment
+      if charge_interest && @payment.interest.present? && !@payment.interest.zero?
+        if @payment.installments.present? && @payment.installments > 1
+          (1.0 + @payment.interest)**@payment.installments
         else
           (1.0 + @payment.interest)
         end
       else
         1.0
       end
-    end
-
-    def exchange_multiplier
-      (@payment.payment_method.try(:exchange_multiplier) || 1.0) * interest_adjusment
     end
 
   end
