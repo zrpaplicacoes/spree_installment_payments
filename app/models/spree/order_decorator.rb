@@ -1,6 +1,6 @@
 module Spree
-  Order.class_eval do
 
+  module OrderDecorator
     def save_payment_with_installments
       if valid_installments?
         payment.interest = payment.payment_method.interest_value_for(payment.installments)
@@ -46,6 +46,11 @@ module Spree
       (1 + payment.interest)**payment.installments
     end
 
+  end
+
+
+  Order.class_eval do
+    prepend Spree::OrderDecorator
   end
 
   Order.state_machine.before_transition to: :confirm, do: :save_payment_with_installments
