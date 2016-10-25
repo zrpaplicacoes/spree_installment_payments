@@ -1,10 +1,6 @@
 module Spree
-  Payment.class_eval do
-    validates :interest, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }
-    validates :installments, numericality: { greater_than_or_equal_to: 1 }
-
-
-    def charge_interest_label
+  module PaymentDecorator
+        def charge_interest_label
       if charge_interest
         klass = "label label-considered_safe"
       else
@@ -60,6 +56,13 @@ module Spree
         self[:charge_interest] = payment_method_charge_interest
       end
     end
+  end
+
+  Payment.class_eval do
+    prepend Spree::PaymentDecorator
+
+    validates :interest, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }
+    validates :installments, numericality: { greater_than_or_equal_to: 1 }
 
   end
 
