@@ -22,15 +22,19 @@ module Spree
     end
 
     def chargeInterest
-      @payment.has_charge_interest?
+      if @payment.saved_installments == 1
+        nil
+      else
+        @payment.has_charge_interest? ? "Y" : "N"
+      end
     end
 
     def charge_interest
-      @payment.has_charge_interest?
+      chargeInterest
     end
 
     def installments
-      @payment.saved_installments
+      @payment.saved_installments == 1 ? nil : @payment.saved_installments
     end
 
     def subtotal

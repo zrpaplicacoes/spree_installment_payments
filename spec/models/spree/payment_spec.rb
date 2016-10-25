@@ -47,7 +47,7 @@ describe Spree::Payment do
 			gateway_options_hash = gateway_options.to_hash
 			expect(payment.interest_adjustment > 1).to be_truthy
 			expect(gateway_options_hash[:installments]).to eq 6
-			expect(gateway_options_hash[:chargeInterest]).to be_truthy
+			expect(gateway_options_hash[:chargeInterest]).to eq "Y"
 			expect(gateway_options_hash[:subtotal].round(2).to_s).to eq "1060.89"
 			expect(payment.amount.round(2).to_s).to eq "116.7"
 		end
