@@ -3,7 +3,7 @@
     <strong><%= Spree.t(:installments) %>:</strong>
   </td>
   <td id='installments'>
-    <%= @order.payment.installments %>
+    <%= @order.payment.installments unless @order.payment.nil? %>
   </td>
 </tr>
 
@@ -12,7 +12,7 @@
     <strong><%= Spree.t(:interest_amount) %>:</strong>
   </td>
   <td id='interest_amount'>
-    <%= Money.new(@order.payment.interest_amount, @order.currency.to_s).format %>
+    <%= Money.new(@order.payment.interest_amount, @order.currency.to_s).format unless @order.payment.nil? %>
   </td>
 </tr>
 
@@ -21,7 +21,7 @@
     <strong><%= Spree.t(:total_per_installment) %>:</strong>
   </td>
   <td id='total_per_installment'>
-    <%= Money.new(@order.display_total_per_installment, @order.currency.to_s).format %>
+    <%= Money.new(@order.display_total_per_installment, @order.currency.to_s).format unless @order.payment.nil? %>
   </td>
 </tr>
 
@@ -30,7 +30,7 @@
     <strong><%= Spree.t(:total_with_interest) %>:</strong>
   </td>
   <td id='total_with_interest'>
-    <%= Money.new(@order.display_total_with_interest, @order.currency.to_s).format %>
+    <%= Money.new(@order.display_total_with_interest, @order.currency.to_s).format unless @order.payment.nil? %>
   </td>
 </tr>
 
@@ -40,7 +40,7 @@
   </td>
   <td>
     <span class="state label label-<%= @order.payment.charge_interest ? "complete" : "error" %>">
-      <%= Spree.t(@order.payment.charge_interest.to_s) %>
+      <%= Spree.t(@order.payment.charge_interest.to_s) unless @order.payment.nil? %>
     </span>
   </td>
 </tr>

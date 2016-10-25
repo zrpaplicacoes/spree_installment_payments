@@ -1,6 +1,29 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
 pt-BR:
+  spree:
+    of: de
+    invalid_number_of_installments: "Número de parcelas não permitido!"
+    no_installment_without_interest: "%{total} sem juros"
+    installment_without_interest: "%{total} (%{installment} x %{per_month}) (sem juros)"
+    no_installment_with_interest: "%{total} without installments (%{interest}% a.m)"
+    installment_with_interest: "%{total} (%{installment} x %{per_month}) (%{interest}% a.m)"
+    interests: Juros
+    max_number_of_installments: Número máximo de parcelas
+    base_value: Valor mínimo por parcela
+    interest_explanation: Os juros definem a taxa cobrada num pedido, baseado no número de parcelas. Então, caso se deseje cobrar um juros de 0.99% a.m, deve-se digitar 0.0099
+    base_value_explanation: "O valor mínimo por parcela define o número de parcelas por compra. Ex: Se um produto custa R$120,00 e o valor mínimo por parcela é $40.00, então a compra pode ser parcelada em até 3x."
+    charge_interest_explanation: O interese dos juros define se os juros é de responsabilidade da loja ou do adquirente. Marque esse valor se quiser informar ao adquirente que os juros estão sendo cobrados pela loja.
+    create_payment_method: Criar método de pagamento!
+    create_zone: Criar uma nova zona!
+    interest_adjustment_label: 'Total: (com juros de %{interest}% a.m):'
+    installment_adjustment_label: 'Total por parcela (em %{installment} parcelas):'
   activerecord:
     errors:
-      invalid_range: "%{start} to %{end} does not configure a valid range"
-      limit_overflow: "%{value} overflows the established limit of %{limit}"
-      overlap: "The specified interval %{defined_interval} overlaps the interval %{interval}"
+      invalid_range: "%{start} a %{end} não é válido"
+      limit_overflow: "%{value} ultrapassa o limite estabelecido de %{limit}"
+      overlap: "O intervalo especificado %{defined_interval} sobrepõe o intervalo %{interval}"
+      invalid_number_of_installments: "O pagamento do pedido não pode ser dividido em %{number_of_installments} parcelas, já que o número máximo de parcelas permitido para o método de pagamento selecionado e para o total do pedido é de %{max_allowed} parcelas"
+      non_installment_order: "O pagamento não pode ser parcelado porque o método de pagamento ou a localidade selecionado não suportam parcelamento"
+      invalid_payment: "As opções informadas para o pagamento são inválidas!"
