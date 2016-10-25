@@ -16,42 +16,25 @@ module Spree
         :billing_address,
         :shipping_address,
         :installments,
-        :chargeInterest
+        :chargeInterest,
+        :charge_interest
       ]
     end
 
     def chargeInterest
-      @payment.payment_method.accept_installments? ? @payment.payment_method.charge_interest : false
+      @payment.has_charge_interest?
+    end
+
+    def charge_interest
+      @payment.has_charge_interest?
     end
 
     def installments
-      @payment.payment_method.accept_installments ? (@payment.installments || 1) : 1
+      @payment.saved_installments
     end
 
     def subtotal
-      order.item_total * interest_adjustment * 100
-    end
-
-    def interest_adjustment
-      begin
-        if @payment.state == "processing"
-          interest = @payment.payment_method.interest_value_for(installments)
-          @payment.update(interest: interest)
-          @payment.reload
-        end
-
-        if chargeInterest && @payment.interest.present? && !@payment.interest.zero?
-          if @payment.installments.present? && @payment.installments > 1
-            (1.0 + @payment.interest)**@payment.installments
-          else
-            (1.0 + @payment.interest)
-          end
-        else
-          1.0
-        end
-      rescue NoMethodError
-        1.0
-      end
+      order.item_total * @payment.interest_adjustment * 100
     end
 
   end

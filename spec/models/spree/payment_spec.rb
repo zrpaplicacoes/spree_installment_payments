@@ -45,10 +45,11 @@ describe Spree::Payment do
 		it 'sets a hash using Spree::Payment::GatewayOptions with installments and charge interest' do
 			gateway_options = Spree::Payment::GatewayOptions.new(payment)
 			gateway_options_hash = gateway_options.to_hash
-			expect(gateway_options.interest_adjustment > 1).to be_truthy
+			expect(payment.interest_adjustment > 1).to be_truthy
 			expect(gateway_options_hash[:installments]).to eq 6
-			expect(gateway_options_hash[:charge_interest]).to be_truthy
+			expect(gateway_options_hash[:chargeInterest]).to be_truthy
 			expect(gateway_options_hash[:subtotal].round(2).to_s).to eq "1060.89"
+			expect(payment.amount.round(2).to_s).to eq "116.7"
 		end
 
 	end
