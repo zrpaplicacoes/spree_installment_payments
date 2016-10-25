@@ -3,6 +3,19 @@
 
 pt-BR:
   spree:
+    general_settings: Configurações Gerais
+    range_settings: Configurações de Parcelamento
+    new_interest: Criar juros
+    name: Nome
+    value: Taxa
+    number_of_installments: Número de parcelas
+    charge_interest: Interesse dos juros
+    installments: Parcelas
+    accept_installments: Aceitar parcelamento
+    interest_amount: Taxa de juros
+    total_per_installment: Total por parcela
+    total_with_interest: Total com juros
+    no_resource_found: Não foram encontrados %{resource}
     of: de
     invalid_number_of_installments: "Número de parcelas não permitido!"
     no_installment_without_interest: "%{total} sem juros"
@@ -14,7 +27,7 @@ pt-BR:
     base_value: Valor mínimo por parcela
     interest_explanation: Os juros definem a taxa cobrada num pedido, baseado no número de parcelas. Então, caso se deseje cobrar um juros de 0.99% a.m, deve-se digitar 0.0099
     base_value_explanation: "O valor mínimo por parcela define o número de parcelas por compra. Ex: Se um produto custa R$120,00 e o valor mínimo por parcela é $40.00, então a compra pode ser parcelada em até 3x."
-    charge_interest_explanation: O interese dos juros define se os juros é de responsabilidade da loja ou do adquirente. Marque esse valor se quiser informar ao adquirente que os juros estão sendo cobrados pela loja.
+    charge_interest_explanation: O interesse dos juros define se os juros é de responsabilidade da loja ou do adquirente. Marque esse valor se quiser informar ao adquirente que os juros estão sendo cobrados pela loja.
     create_payment_method: Criar método de pagamento!
     create_zone: Criar uma nova zona!
     interest_adjustment_label: 'Total: (com juros de %{interest}% a.m):'
