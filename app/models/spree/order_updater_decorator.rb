@@ -8,7 +8,7 @@ module Spree
 
     def update_payment_total
       super
-      order.payment_total = order.payment_total * order.interest_adjustment
+      order.payment_total = order.payment_total * order.interest_adjustment unless order.payments.completed.any?
     end
 
   end
