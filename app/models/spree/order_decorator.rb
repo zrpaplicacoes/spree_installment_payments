@@ -3,8 +3,13 @@ module Spree
   module OrderDecorator
     def save_interests
       if valid_installments?
-        payment.interest = payment.payment_method.interest_value_for(payment.installments)
-        payment.save
+        Spree::Payment.transaction do
+          payment.interest = payment.payment_method.interest_value_for(payment.installments)
+          payment.save
+          self.total = total * interest_adjustment
+          self.save
+        end
+        true
       else
         errors.add(:payments, Spree.t(:invalid_number_of_installments))
         payment.installments = 1
