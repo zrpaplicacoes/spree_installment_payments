@@ -29,7 +29,9 @@ module Spree
       Spree::Money.new(total_per_installment, { currency: currency }).to_s
     end
 
-    private
+    def interest_adjustment
+      (1 + payment.payment_method.interest_value_for(payment.installments))**payment.installments
+    end
 
     def total_per_installment
       (total / ( payment.installments >= 1 ? payment.installments : 1 )) * interest_adjustment
@@ -37,10 +39,6 @@ module Spree
 
     def total_with_interest
       total * interest_adjustment
-    end
-
-    def interest_adjustment
-      (1 + payment.payment_method.interest_value_for(payment.installments))**payment.installments
     end
 
   end
