@@ -1,9 +1,9 @@
 module Spree
   module OrderUpdaterDecorator
 
-    def update_order_total
-      order.total = ( order.item_total + order.shipment_total + order.adjustment_total )
-      order.total = order.total * order.interest_adjustment if !order.payment.nil? && order.payment.state != "failed" && order.payment.state != "processing"
+    def update_payment_total
+      super
+      order.payment_total = order.payment_total * order.interest_adjustment
     end
 
   end
