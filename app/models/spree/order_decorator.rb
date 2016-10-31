@@ -7,6 +7,7 @@ module Spree
         payment.charge_interest = payment.payment_method.charge_interest
         payment.interest_amount = (total_with_interest - total)
         payment.save
+        order.total = payment.amount
       else
         errors.add(:payments, Spree.t(:invalid_number_of_installments))
         payment.installments = 1
@@ -39,7 +40,7 @@ module Spree
     end
 
     def interest_adjustment
-      (1 + payment.interest)**payment.installments
+      (1 + payment.payment_method.interest_value_for(payment.installments))**payment.installments
     end
 
   end
@@ -49,7 +50,7 @@ module Spree
     prepend Spree::OrderDecorator
 
     def valid_installments?
-      payment.installments >= 1 && payment.installments <= payment.payment_method.max_number_of_installments && payment.payment_method.accept_installments?
+      payment.payment_method.accept_installments? && (payment.installments >= 1 && payment.installments <= payment.payment_method.max_number_of_installments)
     end
 
   end
