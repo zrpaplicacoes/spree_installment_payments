@@ -6,13 +6,6 @@
 
   <%- if @payment_method.accept_installments? %>
     <div>
-      <%= f.check_box(:charge_interest) %>
-      <%= label_tag :charge_interest %>
-      <p class="help-block">
-        <%= Spree.t(:charge_interest_explanation) %>
-      </p>
-    </div>
-    <div>
       <%= label_tag :max_number_of_installments %>
       <%= f.number_field(:max_number_of_installments, min: 1, in: 1..120, step: 1, class: "form-control", id: "max_number_of_installments") %>
     </div>

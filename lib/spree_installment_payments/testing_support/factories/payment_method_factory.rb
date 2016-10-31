@@ -11,11 +11,6 @@ FactoryGirl.define do
     accept_installments true
     max_number_of_installments 12
     base_value 100
-    charge_interest false # store installments
-
-    trait :with_charge_interest do
-      charge_interest true # card installments
-    end
 
   end
 

@@ -35,7 +35,6 @@ describe Spree::Order do
 
     it 'updates the payment with the payment method specifications' do
       expect(@order.payment.interest).to eq @interest.value
-      expect(@order.payment.charge_interest).to eq @payment_method.charge_interest
       expect(@order.payment.installments).to eq 3
       # ( 100 * ( 1.01 )**3 )  - 100 => 3.03
       expect(@order.payment.interest_amount).to eq 3.03

@@ -1,2 +1,1 @@
 <th> <%= order.payments.nil? ? 1 : order.payments.last.installments %> </th>
-<th> <%= order.payments.nil? ? content_tag(:span, '-', class: "label label-considered_safe") : order.payments.last.charge_interest_label %> </th>

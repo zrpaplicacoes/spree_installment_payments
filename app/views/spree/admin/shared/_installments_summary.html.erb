@@ -24,14 +24,3 @@
     <%= @order.display_total_per_installment unless @order.payment.nil? %>
   </td>
 </tr>
-
-<tr>
-  <td data-hook='admin_order_tab_included_installments'>
-    <strong><%= Spree.t(:charge_interest) %>:</strong>
-  </td>
-  <td>
-    <span class="state label label-<%= !@order.payment.nil? && @order.payment.charge_interest ? "complete" : "error" %>">
-      <%= Spree.t(@order.payment.charge_interest.to_s) unless @order.payment.nil? %>
-    </span>
-  </td>
-</tr>

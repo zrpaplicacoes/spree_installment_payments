@@ -4,11 +4,11 @@ module Spree
     def save_payment_with_installments
       if valid_installments?
         payment.interest = payment.payment_method.interest_value_for(payment.installments)
-        payment.charge_interest = payment.payment_method.charge_interest
         payment.save
       else
         errors.add(:payments, Spree.t(:invalid_number_of_installments))
         payment.installments = 1
+        payment.interest = 0.0
         payment.save
         false
       end
