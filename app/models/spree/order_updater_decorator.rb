@@ -3,7 +3,7 @@ module Spree
 
     def update_order_total
       super
-      order.total = order.total * order.interest_adjustment if !order.payments.nil? && order.payments.last.state == "completed"
+      order.total = order.total * order.interest_adjustment if order.payments.completed.any?
     end
 
     def update_payment_total
