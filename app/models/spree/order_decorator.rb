@@ -2,9 +2,7 @@ module Spree
 
   module OrderDecorator
     def save_payment_with_installments
-      byebug
       if valid_installments?
-        byebug
         payment.interest = payment.payment_method.interest_value_for(payment.installments)
         payment.charge_interest = payment.payment_method.charge_interest
         payment.interest_amount = (total_with_interest - total)

@@ -1,6 +1,7 @@
 module Spree
   module PaymentDecorator
-        def charge_interest_label
+
+    def charge_interest_label
       if charge_interest
         klass = "label label-considered_safe"
       else
@@ -18,7 +19,7 @@ module Spree
       begin
         update_self_if_processing
 
-        if has_charge_interest? && self.interest.present? && !self.interest.zero?
+        if self.interest.present? && !self.interest.zero?
           if saved_installments.present? && saved_installments > 1
             (1.0 + self.interest)**saved_installments
           else
