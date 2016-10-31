@@ -3,7 +3,7 @@ module Spree
 
     def update_order_total
       order.total = ( order.item_total + order.shipment_total + order.adjustment_total )
-      order.total = order.total * order.interest_adjustment unless order.payment.state == "failed"
+      order.total = order.total * order.interest_adjustment if !order.payment.nil? && order.payment.state != "failed"
     end
 
   end
