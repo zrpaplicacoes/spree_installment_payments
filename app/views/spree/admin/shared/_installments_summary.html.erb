@@ -12,7 +12,7 @@
     <strong><%= Spree.t(:interest_amount) %>:</strong>
   </td>
   <td id='interest_amount'>
-    <%= Money.new(@order.interest_amount, @order.currency.to_s).format unless @order.payment.nil? %>
+    <%= "#{(@order.payment.interest * 100).round(4)}% a.m" unless @order.payment.nil? %>
   </td>
 </tr>
 
@@ -21,7 +21,7 @@
     <strong><%= Spree.t(:total_per_installment) %>:</strong>
   </td>
   <td id='total_per_installment'>
-    <%= Money.new(@order.display_total_per_installment, @order.currency.to_s).format unless @order.payment.nil? %>
+    <%= @order.display_total_per_installment unless @order.payment.nil? %>
   </td>
 </tr>
 

@@ -6,9 +6,6 @@ module Spree
         payment.interest = payment.payment_method.interest_value_for(payment.installments)
         payment.charge_interest = payment.payment_method.charge_interest
         payment.save
-        payment.reload
-        payment.interest_amount = interest_amount
-        payment.save
       else
         errors.add(:payments, Spree.t(:invalid_number_of_installments))
         payment.installments = 1
