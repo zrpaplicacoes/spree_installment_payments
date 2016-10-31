@@ -30,7 +30,11 @@ module Spree
     end
 
     def interest_adjustment
-      (1 + payment.payment_method.interest_value_for(payment.installments))**payment.installments
+      if !payment.nil? && !payment.payment_method.nil?
+        (1 + payment.payment_method.interest_value_for(payment.installments))**payment.installments
+      else
+        1
+      end
     end
 
     def total_per_installment
