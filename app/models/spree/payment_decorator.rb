@@ -1,6 +1,10 @@
 module Spree
   module PaymentDecorator
 
+    def amount
+      super * interest_adjustment
+    end
+
     def interest_adjustment
       begin
         update_self_if_processing
