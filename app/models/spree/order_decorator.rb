@@ -1,7 +1,7 @@
 module Spree
 
   module OrderDecorator
-    def save_payment_with_installments
+    def save_interests
       if valid_installments?
         payment.interest = payment.payment_method.interest_value_for(payment.installments)
         payment.save
@@ -50,5 +50,5 @@ module Spree
 
   end
 
-  Order.state_machine.before_transition to: :confirm, do: :save_payment_with_installments
+  Order.state_machine.before_transition to: :confirm, do: :save_interests
 end
