@@ -57,11 +57,11 @@ module Spree
     end
 
     def total_per_installment
-      ((latest_checkout_payment.try(:amount_with_interest) || 0) / ( latest_checkout_payment.try(:installments) ? latest_checkout_payment.installments : 1 ))
+      ((latest_payment.try(:amount) || 0) / ( latest_payment.try(:installments) ? latest_payment.installments : 1 ))
     end
 
     def interest_amount
-      (latest_checkout_payment.amount_with_interest - latest_checkout_payment.amount).round(2)
+      (latest_checkout_payment.amount - latest_checkout_payment.amount).round(2)
     end
 
   end

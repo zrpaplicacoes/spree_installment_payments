@@ -10,10 +10,12 @@ module Spree
     end
 
     def update_order_total
+      payments.valid.last.try(:set_amount, order_corrected_with_interest_total)
       order.total = order_corrected_with_interest_total
     end
 
     def update_order_total_to_original
+      payments.valid.last.try(:set_amount, order_original_total)
       order.total = order_original_total
     end
 

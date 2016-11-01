@@ -1,8 +1,8 @@
 module Spree
   module PaymentDecorator
 
-    def amount_with_interest
-      amount * interest_adjustment
+    def set_amount amount
+      update(amount: amount)
     end
 
     def interest_adjustment
@@ -18,6 +18,7 @@ module Spree
     def has_interest?
       interest.present? && !interest.zero?
     end
+
   end
 
   Payment.class_eval do

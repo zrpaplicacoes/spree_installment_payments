@@ -23,7 +23,7 @@ module Spree
     end
 
     def current_payment_total
-      @order.payments.valid.inject(0) { |sum, payment| sum += payment.amount_with_interest }.round(2)
+      @order.payments.valid.inject(0) { |sum, payment| sum += payment.amount }.round(2)
     end
 
   end
