@@ -5,13 +5,13 @@ module Spree
     def set_order_totals
       raise Spree::Order::UnavailablePayment unless latest_checkout_payment.present?
 
-      latest_checkout_payment.update(interest: current_payment_method.interest_value_for(installments))
+      payments.each { |payment| payment.update(interest: current_payment_method.interest_value_for(installments)) }
       Spree::OrderUpdater.new(self.reload).update
       true
     end
 
     def reset_order_totals
-      latest_checkout_payment.update(interest: 0.0)
+      payments.each { |payment| payment.update(interest: 0.0) }
       Spree::OrderUpdater.new(self.reload).update_order_total_to_original
       true
     end
@@ -53,7 +53,7 @@ module Spree
     end
 
     def interest_adjustment
-      latest_checkout_payment ? latest_checkout_payment.interest_adjustment : 1.0
+      latest_payment ? latest_payment.interest_adjustment : 1.0
     end
 
     def total_per_installment
@@ -61,7 +61,7 @@ module Spree
     end
 
     def interest_amount
-      (latest_checkout_payment.amount - latest_checkout_payment.amount).round(2)
+      (latest_payment.amount - latest_payment.amount).round(2)
     end
 
   end

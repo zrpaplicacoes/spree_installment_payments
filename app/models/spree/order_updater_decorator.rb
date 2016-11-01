@@ -1,6 +1,19 @@
 module Spree
   module OrderUpdaterDecorator
 
+    def update
+      update_totals
+      if order.completed?
+        update_payment_state
+        update_shipments
+        update_shipment_state
+        update_shipment_total
+        update_payment_total
+      end
+      run_hooks
+      persist_totals
+    end
+
     def order_original_total
       order.item_total + order.shipment_total + order.adjustment_total
     end
