@@ -26,7 +26,7 @@ module Spree
       return highest unless accept_installments?
 
       values = interests.pluck(:number_of_installments, :value)
-      pair = values.each { |pair| highest = pair[0] if installments >= pair[0] }.find { |pair| pair[0] == highest }
+      pair = values.sort.each { |pair| highest = pair[0] if installments >= pair[0] }.find { |pair| pair[0] == highest }
 
       pair.nil? ? 0 : pair[1]
     end
