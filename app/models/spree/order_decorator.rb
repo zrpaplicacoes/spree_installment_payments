@@ -41,11 +41,15 @@ module Spree
     end
 
     def installments
-      latest_completed_payment.try(:installments) || latest_checkout_payment.try(:installments) || Spree.t(:no_installments)
+      payments.last.installments
+    end
+
+    def installments_text
+      latest_completed_payment.try(:installments) || latest_checkout_payment.try(:installments) || Spree.t(:no_installments) || latest_valid_payment.try(:installments)
     end
 
     def has_installments?
-      installments != Spree.t(:no_installments)
+      installments.to_i > 1
     end
 
     def display_total_per_installment
