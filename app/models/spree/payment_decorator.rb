@@ -1,8 +1,8 @@
 module Spree
   module PaymentDecorator
 
-    def amount
-      super * interest_adjustment
+    def amount_with_interest
+      amount * interest_adjustment
     end
 
     def interest_adjustment
@@ -21,7 +21,6 @@ module Spree
   end
 
   Payment.class_eval do
-    class UnavailablePaymentMethod < StandardError; end
     prepend Spree::PaymentDecorator
 
     validates :interest, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }

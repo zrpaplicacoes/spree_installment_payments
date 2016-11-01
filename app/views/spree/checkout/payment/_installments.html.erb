@@ -1,4 +1,4 @@
-<%- if payment_method.can_installment?(@order) %>
+<%- if payment_method.accept_installments_for?(@order) %>
   <p class="field" data-hook="installments">
       <%= label_tag "installments_on_card_#{payment_method.id}" do %>
         <%= Spree.t(:installments) %>

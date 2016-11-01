@@ -1,32 +1,33 @@
-<%- if @order.installments >= 1 %>
-  <tr>
-    <td data-hook='admin_order_tab_included_installments'>
-      <strong><%= Spree.t(:installments) %>:</strong>
-    </td>
-    <td id='installments'>
-      <%= @order.installments %>
-    </td>
-  </tr>
+<%- if @order.has_installments? %>
+<tr>
+  <td data-hook='admin_order_tab_included_installments'>
+    <strong><%= Spree.t(:installments) %>:</strong>
+  </td>
+  <td id='installments'>
+    <%= @order.installments %>
+  </td>
+</tr>
 <% end %>
 
-<%- if @order.latest_payment.has_interest? %>
-  <tr>
-    <td data-hook='admin_order_tab_included_installments'>
-      <strong><%= Spree.t(:interest_amount) %>:</strong>
-    </td>
-    <td id='interest_amount'>
-      <%= @order.formatted_interest %>
-    </td>
-  </tr>
+
+<%- if @order.latest_payment.try(:has_interest?) %>
+<tr>
+  <td data-hook='admin_order_tab_included_installments'>
+    <strong><%= Spree.t(:interest_amount) %>:</strong>
+  </td>
+  <td id='interest_amount'>
+    <%= @order.formatted_interest %>
+  </td>
+</tr>
 <% end %>
 
-<%- if @order.installments >= 1 %>
-  <tr>
-    <td data-hook='admin_order_tab_included_installments'>
-      <strong><%= Spree.t(:total_per_installment) %>:</strong>
-    </td>
-    <td id='total_per_installment'>
-      <%= @order.display_total_per_installment %>
-    </td>
-  </tr>
-<% end >
+<%- if @order.has_installments? %>
+<tr>
+  <td data-hook='admin_order_tab_included_installments'>
+    <strong><%= Spree.t(:total_per_installment) %>:</strong>
+  </td>
+  <td id='total_per_installment'>
+    <%= @order.display_total_per_installment %>
+  </td>
+</tr>
+<% end %>

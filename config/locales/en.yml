@@ -3,6 +3,7 @@
 
 en:
   spree:
+    no_installments: None
     of: of
     invalid_number_of_installments: "Invalid number of installments not allowed!"
     no_installment_without_interest: "%{total} without installments (no interest)"
