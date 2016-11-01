@@ -1,18 +1,19 @@
-<tr>
-  <td data-hook='admin_order_tab_included_installments'>
-    <strong><%= Spree.t(:installments) %>:</strong>
-  </td>
-  <td id='installments'>
-    <%= @order.payment.installments unless @order.payment.nil? %>
-  </td>
-</tr>
-
+<%- if @order.installments >= 1 %>
+  <tr>
+    <td data-hook='admin_order_tab_included_installments'>
+      <strong><%= Spree.t(:installments) %>:</strong>
+    </td>
+    <td id='installments'>
+      <%= @order.installments %>
+    </td>
+  </tr>
+<% end %>
 <tr>
   <td data-hook='admin_order_tab_included_installments'>
     <strong><%= Spree.t(:interest_amount) %>:</strong>
   </td>
   <td id='interest_amount'>
-    <%= "#{(@order.payment.interest * 100).round(4)}% a.m" unless @order.payment.nil? %>
+    <%= @order.formatted_interest %>
   </td>
 </tr>
 
@@ -21,6 +22,6 @@
     <strong><%= Spree.t(:total_per_installment) %>:</strong>
   </td>
   <td id='total_per_installment'>
-    <%= @order.display_total_per_installment unless @order.payment.nil? %>
+    <%= @order.display_total_per_installment %>
   </td>
 </tr>

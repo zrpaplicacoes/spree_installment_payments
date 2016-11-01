@@ -1,5 +1,3 @@
-<%- interest = Spree::Interest.find_by_payment_method_id(payment_method) %>
-
 <%- if payment_method.can_installment?(@order) %>
   <p class="field" data-hook="installments">
       <%= label_tag "installments_on_card_#{payment_method.id}" do %>

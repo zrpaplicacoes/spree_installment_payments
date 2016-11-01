@@ -8,6 +8,10 @@ module Spree
       latest_processing_payment.save
     end
 
+    def formatted_interest
+      "#{(latest_payment.interest * 100).round(4)}% a.m"
+    end
+
     def update_totals_after_payment
       Spree::OrderUpdater.new(self).update
     end
@@ -18,6 +22,10 @@ module Spree
 
     def latest_completed_payment
       payments.completed.last ? payments.completed.last : Spree::Payment.none
+    end
+
+    def latest_payment
+      latest_completed_payment || latest_processing_payment
     end
 
     def current_payment_method
