@@ -68,10 +68,6 @@ module Spree
       (latest_payment.amount - latest_payment.amount).round(2)
     end
 
-    def has_confirm?
-      state_was.eql?("confirm")
-    end
-
   end
 
   Order.class_eval do
@@ -85,5 +81,5 @@ module Spree
 
   Order.state_machine.before_transition to: :payment, do: :reset_order_totals
   Order.state_machine.after_transition to: :confirm, do: :set_order_totals
-  Order.state_machine.before_transition to: :complete, do: :set_order_totals, unless: :has_confirm?
+  Order.state_machine.before_transition to: :complete, do: :set_order_totals
 end
