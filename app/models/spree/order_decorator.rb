@@ -81,4 +81,5 @@ module Spree
 
   Order.state_machine.before_transition to: :payment, do: :reset_order_totals
   Order.state_machine.after_transition to: :confirm, do: :set_order_totals
+  Order.state_machine.after_transition to: :complete, do: :set_order_totals
 end
