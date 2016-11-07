@@ -3,6 +3,7 @@ module Spree
   module OrderDecorator
 
     def set_order_totals
+      byebug
       raise Spree::Order::UnavailablePayment unless latest_checkout_payment.present? || latest_completed_payment.present?
 
       payments.each { |payment| payment.update(interest: current_payment_method.interest_value_for(installments)) unless payment.completed? }
@@ -80,6 +81,5 @@ module Spree
   end
 
   Order.state_machine.before_transition to: :payment, do: :reset_order_totals
-  Order.state_machine.after_transition to: :confirm, do: :set_order_totals
-  Order.state_machine.before_transition to: :complete, do: :set_order_totals
+  Order.state_machine.after_transition from: :payment, do: :set_order_totals
 end

@@ -12,10 +12,6 @@ module Spree
 
     private
 
-    def reset_order_total
-      Spree::OrderUpdater.new(@order).update_order_total_to_original if params[:state] == 'payment'
-    end
-
     def insufficient_payment?
       params[:state] == "confirm" &&
       @order.payment_required? &&
@@ -30,7 +26,6 @@ module Spree
 
   CheckoutController.class_eval do
     prepend Spree::CheckoutControllerDecorator
-    before_action :reset_order_total
   end
 
 end
