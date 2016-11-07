@@ -3,9 +3,9 @@ module Spree
   module OrderDecorator
 
     def set_order_totals
-      raise Spree::Order::UnavailablePayment unless latest_checkout_payment.present?
+      raise Spree::Order::UnavailablePayment unless latest_checkout_payment.present? || latest_completed_payment.present?
 
-      payments.each { |payment| payment.update(interest: current_payment_method.interest_value_for(installments)) }
+      payments.each { |payment| payment.update(interest: current_payment_method.interest_value_for(installments)) unless payment.completed? }
       Spree::OrderUpdater.new(self.reload).update
       true
     end
@@ -33,7 +33,7 @@ module Spree
     end
 
     def current_payment_method
-      latest_checkout_payment.payment_method
+      latest_checkout_payment.nil? ? latest_completed_payment.payment_method : latest_checkout_payment.payment_method
     end
 
     def installments_for_processing_payment
@@ -68,6 +68,10 @@ module Spree
       (latest_payment.amount - latest_payment.amount).round(2)
     end
 
+    def has_confirm?
+      state_was.eql?("confirm")
+    end
+
   end
 
   Order.class_eval do
@@ -81,5 +85,5 @@ module Spree
 
   Order.state_machine.before_transition to: :payment, do: :reset_order_totals
   Order.state_machine.after_transition to: :confirm, do: :set_order_totals
-  Order.state_machine.after_transition to: :complete, do: :set_order_totals
+  Order.state_machine.before_transition to: :complete, do: :set_order_totals, unless: :has_confirm?
 end
